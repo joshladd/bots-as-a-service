@@ -1,1 +1,1 @@
-web: ./gradlew assemble
+web: java -jar ./build/libs/ktor-demo-0.0.1-SNAPSHOT.jar
