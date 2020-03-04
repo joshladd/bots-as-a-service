@@ -45,7 +45,29 @@ fun main() {
                     }
                 }
             }
+            post ("/") {
+                call.respondHtml {
+                    head {
+                        title { +"The Bad Bot Name Generator" }
+                    }
+                    body {
+                        p {
+                            +"The Bad Bot Name Generator"
+                        }
+                        form("/generate", encType = FormEncType.textPlain, method = FormMethod.post) {
+                            acceptCharset = "ascii"
+                            p {
+                                label { +"Number of Names:" }
+                                textInput { name = "textField" }
+                            }
+                            p {
+                                submitInput { value = "Generate Names" }
+                            }
+                        }
+                    }
+                }
 
+            }
             post("/generate") {
 
                 var multipart = call.receiveText()
@@ -65,7 +87,7 @@ fun main() {
                             }
 
 
-                            form("/", encType = FormEncType.textPlain, method = FormMethod.get) {
+                            form("/", encType = FormEncType.textPlain, method = FormMethod.post) {
                                 acceptCharset = "ascii"
                                 p {
                                     submitInput { value = "Try Again" }
