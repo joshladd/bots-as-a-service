@@ -53,7 +53,7 @@ kotlin {
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'com.ktor-demo.ApplicationKt'
+        attributes 'Main-Class': 'com.example.ApplicationKt'
     }
 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
