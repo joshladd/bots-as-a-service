@@ -1,10 +1,13 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
-    
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+
     }
 }
 
@@ -18,7 +21,7 @@ version '0.0.1-SNAPSHOT'
 mainClassName = "io.ktor.server.netty.EngineMain"
 
 sourceSets {
-    main.kotlin.srcDirs = main.java.srcDirs = ['src']
+    main.kotlin.srcDirs = main.java.srcDirs = ['src/kotlin']
     test.kotlin.srcDirs = test.java.srcDirs = ['test']
     main.resources.srcDirs = ['resources']
     test.resources.srcDirs = ['testresources']
@@ -53,7 +56,7 @@ kotlin {
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Main-Class': 'com.example.ApplicationKt'
+        attributes 'Main-Class': "com.example.ApplicationKt"
     }
 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
