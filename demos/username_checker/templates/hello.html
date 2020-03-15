@@ -1,0 +1,24 @@
+<!doctype html>
+<title>Reddit Username Checker</title>
+
+<form method="POST">
+	<label for="username">Check Username</label>
+    <input name="text" id="username">
+    <input type="submit">
+</form>
+
+{% if not status %}
+{% elif status != "AVAILABLE" %}
+<h3 style='color:red'>Username <u>{{ username }}</u> is {{ status }}</h3>
+{% else %}
+<h3 style='color:green'>Username <u>{{ username }}</u> is {{ status }}</h3>
+{% endif %}
+
+
+
+
+<!-- {% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% else %}
+  <h1>Hello, World!</h1>
+{% endif %} -->
