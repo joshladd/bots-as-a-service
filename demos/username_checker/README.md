@@ -3,6 +3,7 @@
 This is a simple web-app that takes a text input, and returns whether that text is an available username on reddit, or if it is unavailable/invalid.
 
 To try it out, here is a link to the heroku deployment:
+
 [Reddit Username Checker](https://lit-wave-40531.herokuapp.com/)
 
 #### Running Locally
@@ -40,7 +41,7 @@ Deploying containers to heroku is really simple. Once you have verified that you
 
 5) now, if your local docker build is working, the next steps to deploy are very simple. 
 * `heroku container:push web`
-* `heroku container:release web'
+* `heroku container:release web`
 
 6) all that's left is to open it with `heroku open`
 
