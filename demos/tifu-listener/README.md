@@ -3,6 +3,7 @@
 This is a simple web-app that will get a random post from the TIFU subreddit at the push of a button.
 
 To try it out, here is a link to the heroku deployment:
+
 [TIFU Post Reader](https://murmuring-bastion-48696.herokuapp.com/)
 
 #### Running Locally
@@ -27,7 +28,7 @@ Since this demo is set up for heroku deployment, simply following the commands b
 
 5) now, if your local docker build is working, the next steps to deploy are very simple. 
 * `heroku container:push web`
-* `heroku container:release web'
+* `heroku container:release web`
 
 6) all that's left is to open it with `heroku open`
 
