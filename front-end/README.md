@@ -14,7 +14,9 @@ You can pull this repo and simply run:
 cd react-portal
 npm install
 npm start
-```` to have the service listen on `:3000`.
+```` 
+
+to have the service listen on `:3000`.
 
 `npm` development mode will also re-compile files when a save that includes a change is performed.
 
