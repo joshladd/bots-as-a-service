@@ -8,7 +8,14 @@ Read also the generated [`README.md`](react-portal/README.md).
 
 To run this in development mode, make sure you have `npm` installed.
 
-You can pull this repo and simply run `npm start` to have the service list on `:3000`.
+You can pull this repo and simply run:
+
+```shell
+cd react-portal
+npm install
+npm start
+```` to have the service listen on `:3000`.
+
 `npm` development mode will also re-compile files when a save that includes a change is performed.
 
 ## Sources
