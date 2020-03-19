@@ -6,7 +6,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect,
 } from "react-router-dom";
 
@@ -57,7 +56,6 @@ function Create(props) {
   return (
     <ThemeProvider theme={props.theme}>
       <CreationPortal />
-      <Attribution />
     </ThemeProvider>
   );
 }
