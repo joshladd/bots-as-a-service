@@ -6,7 +6,6 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 
 import BotDetailsForm from './BotDetailsForm';
@@ -50,14 +49,14 @@ const useStyles = makeStyles(theme => ({
 
 const steps = ['details', 'services', 'review'];
 
-function getStepContent(step) {
+function getStepContent(step, ref, payload) {
   switch (step) {
     case 0:
-      return <BotDetailsForm />;
+      return <BotDetailsForm payload={payload} ref={ref} />;
     case 1:
-      return <ServicesForm />;
+      return <ServicesForm payload={payload} ref={ref} />;
     case 2:
-      return <Review />;
+      return <Review payload={payload} ref={ref} />;
     default:
       throw new Error('Unknown step');
   }
@@ -66,9 +65,18 @@ function getStepContent(step) {
 export default function CreationPortal() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
+  let ref = React.createRef();
+
+  let stepData = {};
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    let thisStepData = ref.current.returnDataOrNull()
+
+    if (thisStepData !== null) {
+      stepData[activeStep] = thisStepData;
+      setActiveStep(activeStep + 1);
+      console.log(stepData);
+    }
   };
 
   const handleBack = () => {
@@ -96,7 +104,7 @@ export default function CreationPortal() {
               <FinishedWorkflow />
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep)}
+                {getStepContent(activeStep, ref, stepData[activeStep])}
                 <div className={classes.buttons}>
                   {activeStep !== 0 && (
                     <Button onClick={handleBack} className={classes.button}>
@@ -109,7 +117,7 @@ export default function CreationPortal() {
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                    {activeStep === steps.length - 1 ? 'submit' : 'next'}
                   </Button>
                 </div>
               </React.Fragment>

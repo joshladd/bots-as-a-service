@@ -30,6 +30,8 @@ export default function RedditTypesCheckboxGroup() {
   const { subreddits, livethreads } = state;
   const error = [subreddits, livethreads].filter(v => v).length === 0;
 
+  // For now, we're hardcoding these to true/false and disabling inputs entirely.
+  // Current project scope is going to be only subreddits.
   return (
     <div className={classes.root}>
       <FormControl required error={error} component="fieldset" className={classes.formControl}>
@@ -38,10 +40,12 @@ export default function RedditTypesCheckboxGroup() {
           <FormControlLabel
             control={<Checkbox checked={subreddits} onChange={handleChange('subreddits')} value="subreddits" />}
             label="subreddits"
+            disabled
           />
           <FormControlLabel
             control={<Checkbox checked={livethreads} onChange={handleChange('livethreads')} value="livethreads" />}
-            label="livethreads"
+            label="livethreads (not yet implemented)"
+            disabled
           />
         </FormGroup>
         <FormHelperText>what to trigger your bot on. must check at least one option.</FormHelperText>
