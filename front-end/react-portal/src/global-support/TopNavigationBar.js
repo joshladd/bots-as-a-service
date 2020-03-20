@@ -21,6 +21,23 @@ const useStyles = makeStyles(theme => ({
 export default function TopNavigationBar() {
 	const classes = useStyles();
 
+  let botsVariant = 'text';
+  let botsDisabled = false;
+  let createVariant = 'text';
+  let createDisabled = false;
+
+  switch (window.location.pathname) {
+    case '/bots':
+      botsVariant = 'outlined';
+      botsDisabled = true;
+      break;
+    case '/create':
+      createVariant = 'outlined';
+      createDisabled = true;
+      break;
+    default: break;
+  }
+
 	return (
 		<AppBar position="absolute" color="default" className={classes.appBar}>
 	    <Toolbar>
@@ -28,8 +45,24 @@ export default function TopNavigationBar() {
 	        bots-as-a-service
 	      </Typography>
 
-	      <Button className={classes.menuButton} color="inherit" href="/bots">bots</Button>
-	      <Button className={classes.menuButton} color="inherit" href="/create">create</Button>
+	      <Button
+          className={classes.menuButton}
+          color="inherit"
+          href="/bots"
+          variant={botsVariant}
+          disabled={botsDisabled}
+        >
+          bots
+        </Button>
+	      <Button
+           className={classes.menuButton}
+           color="inherit"
+           href="/create"
+           variant={createVariant}
+           disabled={createDisabled}
+        >
+           create
+         </Button>
 	    </Toolbar>
 	  </AppBar>
 	);
