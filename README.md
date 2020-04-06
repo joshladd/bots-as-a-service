@@ -10,10 +10,27 @@ Team 10
 
 |Purpose|Technology|
 |---|---|
-|Language|Kotlin|
-|Framework|Ktor|
-|Infrastructure|Heroku|
 |CI/CD|[GitHub Actions](https://github.com/joshladd/bots-as-a-service/actions/new)|
+
+#### Front-End
+
+|Purpose|Technology|
+|---|---|
+|Language|JavaScript / Babel|
+|Framework|React|
+|Infrastructure|AWS S3|
+
+#### API
+
+|Purpose|Technology|
+|---|---|
+|Language|...|
+
+#### Containers
+
+|Purpose|Technology|
+|---|---|
+|Language|...|
 
 ### Project Description
 
