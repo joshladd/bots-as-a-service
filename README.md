@@ -18,7 +18,8 @@ Team 10
 |---|---|
 |Language|JavaScript / Babel|
 |Framework|React|
-|Infrastructure|AWS S3|
+|Infrastructure|TBD|
+|Testing|Jest|
 
 #### API
 
