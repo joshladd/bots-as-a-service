@@ -1,5 +1,7 @@
 # Bots as a Service
 
+![front-end unit tests](https://github.com/joshladd/bots-as-a-service/workflows/front-end%20unit%20tests/badge.svg?branch=master&event=push)
+
 Team 10
 
 - Joshua Ladd
