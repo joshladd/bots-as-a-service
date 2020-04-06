@@ -1,6 +1,6 @@
 # front-end
 
-This GUI is built on [React](https://reactjs.org/) and is deployed and served via [AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html).
+This GUI is built on [React](https://reactjs.org/) and is deployed and served via TBD.
 
 Read also the generated [`README.md`](react-portal/README.md).
 
@@ -14,7 +14,7 @@ You can pull this repo and simply run:
 cd react-portal
 npm install
 npm start
-```` 
+````
 
 to have the service listen on `:3000`.
 
