@@ -1,0 +1,41 @@
+{
+    "name" : "Bots-as-a-service Master Controller",
+    "version" : "v1.0",
+    "auth" : {
+      "client_id" : "mxwGgfh6jfNKQA",
+      "client_secret" : "RrnL-uIxqUEoF7yDMh_J1bkJpb0",
+      "username" : "BaaS_Master",
+      "password" : "leo030811",
+      "user_agent" : "Monitor for Deployed Bots"
+    },
+    "status" : {
+      "online" : false,
+      "valid" : true
+    },
+    "config" : {
+      "subreddits" : [
+        "tifu",
+        "rocketleague",
+        "soccer",
+        "hockey",
+        "webdev"
+      ],
+      "comments_enabled" : true,
+      "livestream_enabled" : false,
+      "keyphrase" : "I respond to this",
+      "services" : [
+        {
+          "service_name" : "post_counter",
+          "language" : "en_US"
+        },
+        {
+          "service_name" : "link finder",
+          "language" : "en_US"
+        },
+        {
+          "service_name" : "thread stats",
+          "language" : "en_US"
+        }
+      ]
+    }
+  }
