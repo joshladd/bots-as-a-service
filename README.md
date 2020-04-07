@@ -33,7 +33,10 @@ Team 10
 
 |Purpose|Technology|
 |---|---|
-|Language|...|
+| Language | Kotlin |
+| Container | Docker |
+| Deployment | Elastic Kubernetes Service (EKS) |
+
 
 ### Project Description
 
