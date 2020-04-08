@@ -19,8 +19,8 @@ jobs:
       with:
         java-version: 1.8
     - name: Build project with gradle
-      run: ./gradlew build
+      run: gradle build
       working-directory: back_end/generic-bot
     - name: Run tests.
-      run: ./gradlew test
+      run: gradle test
       working-directory: back_end/generic-bot
