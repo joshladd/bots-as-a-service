@@ -18,9 +18,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Set up node in CI mode.
-      run: npm ci
-      working-directory: front-end/react-portal
     - name: Build project with gradle
       working-directory: back_end/generic-bot
       run: gradle build
