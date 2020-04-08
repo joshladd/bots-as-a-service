@@ -10,6 +10,8 @@ Team 10
 - Kamiar Coffey
 - Evan Lee
 
+Try it out! https://joshladd.github.io/bots-as-a-service/#/bots
+
 ### Technology Stack
 
 |Purpose|Technology|
@@ -22,7 +24,7 @@ Team 10
 |---|---|
 |Language|JavaScript / Babel|
 |Framework|React|
-|Infrastructure|TBD|
+|Hosted On|[GitHub Pages](https://joshladd.github.io/bots-as-a-service/#/bots)|
 |Testing|Jest|
 
 #### API
