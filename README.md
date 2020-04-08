@@ -14,33 +14,7 @@ Try it out! https://joshladd.github.io/bots-as-a-service/#/bots
 
 ### Technology Stack
 
-|Purpose|Technology|
-|---|---|
-|CI/CD|[GitHub Actions](https://github.com/joshladd/bots-as-a-service/actions/new)|
-
-#### Front-End
-
-|Purpose|Technology|
-|---|---|
-|Language|JavaScript / Babel|
-|Framework|React|
-|Hosted On|[GitHub Pages](https://joshladd.github.io/bots-as-a-service/#/bots)|
-|Testing|Jest|
-
-#### API
-
-|Purpose|Technology|
-|---|---|
-|Language|...|
-
-#### Containers
-
-|Purpose|Technology|
-|---|---|
-| Language | Kotlin |
-| Container | Docker |
-| Deployment | Elastic Kubernetes Service (EKS) |
-
+See: [the wiki](https://github.com/joshladd/bots-as-a-service/wiki/Architecture#technology-stack)
 
 ### Project Description
 
