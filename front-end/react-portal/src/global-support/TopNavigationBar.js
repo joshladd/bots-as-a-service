@@ -27,11 +27,11 @@ export default function TopNavigationBar() {
   let createDisabled = false;
 
   switch (window.location.pathname) {
-    case '/bots':
+    case '/bots-as-a-service/bots':
       botsVariant = 'outlined';
       botsDisabled = true;
       break;
-    case '/create':
+    case '/bots-as-a-service/create':
       createVariant = 'outlined';
       createDisabled = true;
       break;
@@ -48,7 +48,7 @@ export default function TopNavigationBar() {
 	      <Button
           className={classes.menuButton}
           color="inherit"
-          href="/bots"
+          href="/bots-as-a-service/bots"
           variant={botsVariant}
           disabled={botsDisabled}
         >
@@ -57,7 +57,7 @@ export default function TopNavigationBar() {
 	      <Button
            className={classes.menuButton}
            color="inherit"
-           href="/create"
+           href="/bots-as-a-service/create"
            variant={createVariant}
            disabled={createDisabled}
         >

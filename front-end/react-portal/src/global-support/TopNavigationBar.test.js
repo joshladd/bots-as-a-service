@@ -15,7 +15,7 @@ test('expected menu buttons rendered', () => {
 test('bots button deactivated on own page', () => {
   delete window.location;
   window.location = {
-    pathname: '/bots'
+    pathname: '/bots-as-a-service/bots'
   };
 
   render(<TopNavigationBar />);
