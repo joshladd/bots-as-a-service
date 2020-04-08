@@ -3,7 +3,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
   Redirect,
@@ -34,17 +34,14 @@ export default function App() {
         <Router>
           <div>
             <Switch>
-              <Route path="/bots-as-a-service/create">
+              <Route path="/create">
                 <Create theme={theme}/>
               </Route>
-              <Route path="/bots-as-a-service/bots">
+              <Route path="/bots">
                 <Bots theme={theme}/>
               </Route>
-              <Route path="/bots-as-a-service/">
-                <Redirect to="/bots-as-a-service/bots" />
-              </Route>
               <Route path="/">
-                <Redirect to="/bots-as-a-service/bots" />
+                <Redirect to="/bots" />
               </Route>
             </Switch>
           </div>

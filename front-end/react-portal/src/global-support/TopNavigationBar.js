@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState }from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,25 +18,43 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function TopNavigationBar() {
+export default function TopNavigationBar(props) {
 	const classes = useStyles();
 
-  let botsVariant = 'text';
-  let botsDisabled = false;
-  let createVariant = 'text';
-  let createDisabled = false;
+  function stateMaker(activeWindow) {
+    let botsVariant = 'text';
+    let botsDisabled = false;
+    let createVariant = 'text';
+    let createDisabled = false;
 
-  switch (window.location.pathname) {
-    case '/bots-as-a-service/bots':
-      botsVariant = 'outlined';
-      botsDisabled = true;
-      break;
-    case '/bots-as-a-service/create':
-      createVariant = 'outlined';
-      createDisabled = true;
-      break;
-    default: break;
+    // This is the initial state upon render
+    switch (activeWindow) {
+      case '#/bots':
+        botsVariant = 'outlined';
+        botsDisabled = true;
+        break;
+      case '#/create':
+        createVariant = 'outlined';
+        createDisabled = true;
+        break;
+      default: break;
+    }
+
+    const createdState = {
+      bots: {
+        variant: botsVariant,
+        disabled: botsDisabled,
+      },
+      create: {
+        variant: createVariant,
+        disabled: createDisabled,
+      }
+    }
+    return createdState;
   }
+
+  const initialState = stateMaker(window.location.hash);
+  const [state, updateState] = useState(initialState);
 
 	return (
 		<AppBar position="absolute" color="default" className={classes.appBar}>
@@ -48,18 +66,20 @@ export default function TopNavigationBar() {
 	      <Button
           className={classes.menuButton}
           color="inherit"
-          href="/bots-as-a-service/bots"
-          variant={botsVariant}
-          disabled={botsDisabled}
+          href="#/bots"
+          variant={ state.bots.variant }
+          disabled={ state.bots.disabled }
+          onClick={ () => updateState(stateMaker("#/bots")) }
         >
           bots
         </Button>
 	      <Button
            className={classes.menuButton}
            color="inherit"
-           href="/bots-as-a-service/create"
-           variant={createVariant}
-           disabled={createDisabled}
+           href="#/create"
+           variant={ state.create.variant }
+           disabled={ state.create.disabled }
+           onClick={ () => updateState(stateMaker("#/create")) }
         >
            create
          </Button>
