@@ -34,14 +34,17 @@ export default function App() {
         <Router>
           <div>
             <Switch>
-              <Route path="/create">
+              <Route path="/bots-as-a-service/create">
                 <Create theme={theme}/>
               </Route>
-              <Route path="/bots">
+              <Route path="/bots-as-a-service/bots">
                 <Bots theme={theme}/>
               </Route>
+              <Route path="/bots-as-a-service/">
+                <Redirect to="/bots-as-a-service/bots" />
+              </Route>
               <Route path="/">
-                <Redirect to="/bots" />
+                <Redirect to="/bots-as-a-service/bots" />
               </Route>
             </Switch>
           </div>
