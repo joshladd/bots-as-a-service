@@ -15,7 +15,7 @@ test('expected menu buttons rendered', () => {
 test('bots button deactivated on own page', () => {
   delete window.location;
   window.location = {
-    pathname: '/bots-as-a-service/bots'
+    hash: '#/bots'
   };
 
   render(<TopNavigationBar />);
@@ -27,7 +27,7 @@ test('bots button deactivated on own page', () => {
 test('create button deactivated on own page', () => {
   delete window.location;
   window.location = {
-    pathname: '/bots-as-a-service/create'
+    hash: '#/create'
   };
 
   render(<TopNavigationBar />);
@@ -41,5 +41,5 @@ test('clicking buttons changes window location', () => {
   const createButton = screen.getByRole('link', {name: 'create'});
 
   fireEvent.click(createButton);
-  expect(window.location.pathname).toBe('/bots-as-a-service/create')
+  expect(window.location.hash).toBe('#/create')
 });
