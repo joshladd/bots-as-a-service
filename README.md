@@ -2,6 +2,8 @@
 
 ![front-end unit tests](https://github.com/joshladd/bots-as-a-service/workflows/front-end%20unit%20tests/badge.svg?branch=master&event=push)
 
+![back end unit tests](https://github.com/joshladd/bots-as-a-service/workflows/back%20end%20unit%20tests/badge.svg)
+
 Team 10
 
 - Joshua Ladd
