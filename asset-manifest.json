@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/bots-as-a-service/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/bots-as-a-service/static/js/main.022bb5e2.chunk.js",
-    "main.js.map": "/bots-as-a-service/static/js/main.022bb5e2.chunk.js.map",
+    "main.js": "/bots-as-a-service/static/js/main.e900caca.chunk.js",
+    "main.js.map": "/bots-as-a-service/static/js/main.e900caca.chunk.js.map",
     "runtime-main.js": "/bots-as-a-service/static/js/runtime-main.45ad9cc6.js",
     "runtime-main.js.map": "/bots-as-a-service/static/js/runtime-main.45ad9cc6.js.map",
     "static/js/2.249e76a4.chunk.js": "/bots-as-a-service/static/js/2.249e76a4.chunk.js",
     "static/js/2.249e76a4.chunk.js.map": "/bots-as-a-service/static/js/2.249e76a4.chunk.js.map",
     "index.html": "/bots-as-a-service/index.html",
-    "precache-manifest.f1629ffaef28f98b4f4b332cd30b1705.js": "/bots-as-a-service/precache-manifest.f1629ffaef28f98b4f4b332cd30b1705.js",
+    "precache-manifest.ea46cd09d489eb671d6ec4b04869054c.js": "/bots-as-a-service/precache-manifest.ea46cd09d489eb671d6ec4b04869054c.js",
     "service-worker.js": "/bots-as-a-service/service-worker.js",
     "static/css/main.5ecd60fb.chunk.css.map": "/bots-as-a-service/static/css/main.5ecd60fb.chunk.css.map",
     "static/js/2.249e76a4.chunk.js.LICENSE.txt": "/bots-as-a-service/static/js/2.249e76a4.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.45ad9cc6.js",
     "static/js/2.249e76a4.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.022bb5e2.chunk.js"
+    "static/js/main.e900caca.chunk.js"
   ]
 }

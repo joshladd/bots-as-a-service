@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "ccc4586ee2df1fb4586e203eafb4c9d6",
+    "revision": "c08be4fce6f746f7a856998fe9f81429",
     "url": "/bots-as-a-service/index.html"
   },
   {
-    "revision": "48e862e1f003df5ab012",
+    "revision": "a809828e5dfb61466a0b",
     "url": "/bots-as-a-service/static/css/main.5ecd60fb.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/bots-as-a-service/static/js/2.249e76a4.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "48e862e1f003df5ab012",
-    "url": "/bots-as-a-service/static/js/main.022bb5e2.chunk.js"
+    "revision": "a809828e5dfb61466a0b",
+    "url": "/bots-as-a-service/static/js/main.e900caca.chunk.js"
   },
   {
     "revision": "c3e691161d1da41ce9e8",
