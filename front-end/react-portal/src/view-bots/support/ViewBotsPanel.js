@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 
 import Divider from '@material-ui/core/Divider';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -47,7 +46,7 @@ export default function ViewBotsPanel(props){
 	const botName = props.payload.name;
 	const isOnline = props.payload.status.online;
 
-	const enabledStatusLabel = isOnline ? 'active' : 'disabled';
+	const enabledStatusLabel = isOnline ? 'disabled' : 'active';
 
 	const isPlayButtonDisabled = !isOnline;
 	const isPauseButtonDisabled = !isPlayButtonDisabled;
@@ -62,36 +61,6 @@ export default function ViewBotsPanel(props){
         <Typography className={classes.heading}>{botName}</Typography>
         <Typography className={classes.secondaryHeading}>{enabledStatusLabel}</Typography>
 				<Divider orientation="vertical" flexItem />
-				<IconButton
-					aria-label="start-bot"
-					onClick={event => event.stopPropagation()}
-          onFocus={event => event.stopPropagation()}
-					className={classes.startButton}
-					disabled={isPlayButtonDisabled}
-					size="small"
-				>
-					<PlayArrowIcon fontSize="small"/>
-				</IconButton>
-				<IconButton
-					aria-label="pause-bot"
-					onClick={event => event.stopPropagation()}
-          onFocus={event => event.stopPropagation()}
-					className={classes.pauseButton}
-					disabled={isPauseButtonDisabled}
-					size="small"
-				>
-					<PauseIcon fontSize="small"/>
-				</IconButton>
-				<IconButton
-					aria-label="delete-bot"
-					onClick={event => event.stopPropagation()}
-          onFocus={event => event.stopPropagation()}
-					className={classes.deleteButton}
-					size="small"
-					disabled={isPlayButtonDisabled}
-				>
-					<DeleteIcon fontSize="small" />
-				</IconButton>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Typography>
