@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
+      width: 1000,
       marginLeft: 'auto',
       marginRight: 'auto',
     },
@@ -64,7 +64,7 @@ function getStepContent(step, ref, payload) {
 
 export default function CreationPortal() {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(0); 
   let ref = React.createRef();
 
   let stepData = {};
@@ -75,7 +75,9 @@ export default function CreationPortal() {
     if (thisStepData !== null) {
       stepData[activeStep] = thisStepData;
       setActiveStep(activeStep + 1);
-      console.log(stepData);
+    }
+    else {
+      console.log("didn't get any data; forcing stop.");
     }
   };
 
