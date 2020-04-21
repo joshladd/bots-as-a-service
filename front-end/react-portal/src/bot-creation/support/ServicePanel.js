@@ -67,35 +67,45 @@ export default function ServicePanel({ payload }) {
     // Pretty much ignore the actual state of the state/expand
     // And rely only on the enabled/disabled state to control all sub-components
     setEnabled(!isEnabled);
-
   }
 
-  const inputsList = payload.inputs.map((inputField) => {
-    let elem = null;
-    switch (inputField.flavor) {
-      case 'text':
-        elem = <TextField
-          className={ classes.inputFields }
-          label={ inputField.name }
-          helperText={ inputField.helperText }
-          color="primary"
-          required={ inputField.required }
-          inputProps={{
-            className: classes.rightTextAlign,
-            align: "right",
-          }}
-          InputProps={{
-            endAdornment: <InputAdornment position="end">{ inputField.adornments.end }</InputAdornment>,
-          }}
-          variant="outlined"
-        />;
-        break;
-      default:
-        console.log(`Could not process input field flavor: ${inputField.flavor}`)
-        break;
-    }
-    return <Grid key={ inputField.name } item xs={12} sm={6}>{elem}</Grid>;
-  })
+	const getinputsList = () => {
+		if (payload.inputs.length === 0) {
+			return (
+				<Grid item xs={12} sm={6}>
+					<Typography variant="caption">no inputs for this service</Typography>
+				</Grid>
+			);
+		} else {
+			return payload.inputs.map((inputField) => {
+				let elem = null;
+				switch (inputField.flavor) {
+					case 'text':
+						elem = <TextField
+							className={ classes.inputFields }
+							label={ inputField.name }
+							helperText={ inputField.helperText }
+							color="primary"
+							required={ inputField.required }
+							inputProps={{
+								className: classes.rightTextAlign,
+								align: "right",
+							}}
+							InputProps={{
+								endAdornment: <InputAdornment position="end">{ inputField.adornments.end }</InputAdornment>,
+							}}
+							variant="outlined"
+						/>;
+						break;
+					default:
+						console.log(`Could not process input field flavor: ${inputField.flavor}`)
+						break;
+				}
+				return <Grid key={ inputField.name } item xs={12} sm={6}>{ elem }</Grid>;
+			})
+		}
+	}
+
 
   return (
     <ExpansionPanel
@@ -122,7 +132,7 @@ export default function ServicePanel({ payload }) {
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className={ classes.panelDetails }>
         <Grid container spacing={3}>
-        { inputsList }
+        { getinputsList() }
         </Grid>
       </ExpansionPanelDetails>
       <Divider />
@@ -131,6 +141,7 @@ export default function ServicePanel({ payload }) {
           <Grid item xm={12} sm={12}>
             <ToggleButtonGroup
               hidden={!payload.configurableQuery}
+							size="small"
               value={ queryIndicator }
               exclusive
               onChange={ handleIndicator }
@@ -149,7 +160,7 @@ export default function ServicePanel({ payload }) {
           </Grid>
           <Grid item xm={12} sm={12}>
             <Typography className={classes.panelCaption} variant="caption" display="block">
-              query indicator - an example invocation: <code>!fandom { queryIndicator.replace(" ", "search-term") }</code>
+              query indicator - an example invocation: <code>{payload.invocation.symbol + payload.invocation.term} { queryIndicator.replace(" ", "search-term") }</code>
             </Typography>
           </Grid>
         </Grid>
