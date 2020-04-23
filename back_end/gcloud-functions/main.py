@@ -1,63 +1,11 @@
 import yaml
 import json
 import requests
+import time
 from google.cloud import storage
 from kubernetes import client, config
 from flask import make_response, jsonify
 from google.cloud import container_v1
-
-
-def local_activate_bot(request):
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket('deployment-yaml')
-    blob = bucket.blob('deployment.yaml')
-    contents = blob.download_as_string()
-    dep = yaml.safe_load(contents)
-    print("YAML\n", dep)
-
-    config.load_kube_config('config')
-
-    k8s_apps_v1 = client.AppsV1Api()
-    resp = k8s_apps_v1.create_namespaced_deployment(
-        body=dep, namespace="default")
-    print("Deployment created. status='%s'" % resp.metadata.name)
-
-
-def deploy_bot_with_yaml(request):
-
-    json_data = request.get_json(force=True)
-    bot = json_data.get('bot-name')
-    config = json_data.get('yaml')
-
-    if bot == None:
-        return jsonify({'result':'fail','message':'no valid bot'})
-    if config == None:
-        return jsonify({'result':'fail','message':'no valid config'})
-
-    try:
-        """Upload a file to the bucket."""
-        storage_client = storage.Client()
-        bucket_name = "deployment-yaml"
-        bucket = storage_client.bucket(bucket_name)        
-        blob = bucket.blob(bot)
-        blob.upload_from_string(json.dumps(config))
-
-        return make_response(jsonify({'result': 'ok', 'message':'bot {} created'.format(bot)}), 200)
-
-    except Exception as error:
-        print('Fail to set configuration: {}'.format(str(error)))
-        return jsonify({'result':'fail','message':'{}'.format(str(error))})
-
-def alternative(request):
-    client = container_v1.ClusterManagerClient()
-
-    # create_cluster
-
-    project_id = 'bots-as-a-service'
-    zone = 'us-west1-a'
-
-    response = client.list_clusters(project_id, zone)
-    return response.attributes
 
 
 ########################
@@ -66,35 +14,37 @@ def alternative(request):
 
 def deactivate_bot(request):
 
-    if request.args and 'bot-name' in request.args:
-        bot_name = request.args.get('bot-name')
+    if request.args and 'id' in request.args:
+        bot_name = request.args.get('id')
     
         try:
             config.load_kube_config('config')
             k8s_apps_v1 = client.AppsV1Api()
-            api_response = k8s_apps_v1.delete_namespaced_deployment(
+            resp = k8s_apps_v1.delete_namespaced_deployment(
                 name=bot_name,
                 namespace="default",
                 body=client.V1DeleteOptions(
                     propagation_policy='Foreground',
                     grace_period_seconds=5))
-            print("Deployment deleted. status='%s'" % str(api_response.status))
-        except:
-            return make_response(jsonify({'error': 'Cannot find bot to delete'}), 500)
+
+            status = "Deployment Deleted. status: '{}".format(resp.metadata.name)
+            return make_response(jsonify({'message': status}), 200)
+
+        except Exception as e:
+            return make_response(jsonify({'error': e}), 500)
     else:
-        return make_response(jsonify({'error': 'bot-name must be in args'}), 400)
+        return make_response(jsonify({'error': 'id must be in args'}), 400)
+
 
 def activate_bot(request):
 
-    if request.args and 'bot-name' in request.args:
-        bot_name = request.args.get('bot-name')
-
-        print('Activating Bot {}'.format(bot_name))
+    if request.args and 'id' in request.args:
+        bot_name = request.args.get('id')
 
         storage_client = storage.Client()
         bucket = storage_client.get_bucket('deployment-yaml')
 
-        bot_yaml = str.format(bot_name)+'.yaml'
+        bot_yaml = str.format(bot_name)
 
         try:
             blob = bucket.blob(bot_yaml)
@@ -103,38 +53,67 @@ def activate_bot(request):
             config.load_kube_config('config')
             k8s_apps_v1 = client.AppsV1Api()
             resp = k8s_apps_v1.create_namespaced_deployment(
-                body=dep, namespace="default")
+                body=dep, 
+                namespace="default")
             
-            status = "Deployment created. status: '{}".format(resp.metadata.name)
+            status = "Deployment created. status: {}".format(resp.metadata.name)
             return make_response(jsonify({'message': status}), 200)
 
-        except:
-            return make_response(jsonify({'error': 'Cannot fetch bot configuration file'}), 500)
+        except Exception as e:
+            return make_response(jsonify({'error': e}), 500)
     else:
-        return make_response(jsonify({'error': 'bot-name must be in args'}), 400)
+        return make_response(jsonify({'error': 'id must be in args'}), 400)
+
+def get_bots(request):
+    try:
+        bucket_name = 'bot-configurations'
+        storage_client = storage.Client()
+        bucket = storage_client.get_bucket(bucket_name)
+        blobs = storage_client.list_blobs(bucket_name)
+
+        response_list = [blob.download_as_string() for blob in blobs]
+        
+        return make_response(jsonify({'bots': response_list}), 200)
+        
+
+    except KeyError as e:
+        return make_response(jsonify({'cant find any bots': str(e)}), 400)
+    except:
+        make_response(jsonify({'error': 'Something really bad happened. Probably the database is down'}), 400)
 
 
 
-def configure_bot(request):
+def create_bot(request):
 
     json_data = request.get_json(force=True)
-    bot = json_data.get('bot-name')
+    bot_name = json_data.get('bot-name') # explicitly pass the name - used for YAML should be independent from config format
     config = json_data.get('config')
 
-    if bot == None:
-        return jsonify({'result':'fail','message':'no valid bot'})
     if config == None:
         return jsonify({'result':'fail','message':'no valid config'})
+
+    if bot_name == None:
+        return jsonify({'result':'fail','message':'no valid name'})
+    
+    bot_id = bot_name
+    # uuid here
 
     try:
         """Upload a file to the bucket."""
         storage_client = storage.Client()
         bucket_name = "bot-configurations"
         bucket = storage_client.bucket(bucket_name)        
-        blob = bucket.blob(bot)
+        blob = bucket.blob(bot_id)
         blob.upload_from_string(json.dumps(config))
 
-        return make_response(jsonify({'result': 'ok', 'message':'bot {} configured'.format(bot)}), 200)
+        """Upload a file to the bucket."""
+        yaml_template = {"apiVersion": "apps/v1", "kind": "Deployment", "metadata": {"name": bot_name}, "spec": {"selector": {"matchLabels": {"app": bot_name}}, "replicas": 1, "template": {"metadata": {"labels": {"app": bot_name}}, "spec": {"containers": [{"name": "application", "image": "index.docker.io/kamiarcoffey/bots-as-a-service:"+bot_name, "imagePullPolicy": "Always", "ports": [{"containerPort": 5000}]}]}}}}
+        yaml_bucket = storage_client.bucket("deployment-yaml")        
+        blob1 = yaml_bucket.blob(bot_id)
+        blob1.upload_from_string(json.dumps(yaml_template))
+
+        return make_response(jsonify({'result': 'ok', 'message':{'id':'{}'.format(bot_id)}}), 200)
+
 
     except Exception as error:
         print('Fail to set configuration: {}'.format(str(error)))
@@ -142,40 +121,32 @@ def configure_bot(request):
 
 
 
-def register_bot(request):
 
-    if request.args and 'bot-name' in request.args:
-        bot_name = request.args.get('bot-name')
+########################
+    # Tests
+########################
 
+def test_get_bots():
+    try:
+        bucket_name = 'bot-configurations'
         storage_client = storage.Client()
-        bucket = storage_client.get_bucket('deployment-yaml')
+        bucket = storage_client.get_bucket(bucket_name)
+        blobs = storage_client.list_blobs(bucket_name)
 
-        try:
-            """Upload a file to the bucket."""
-            bot_name = '{}'.format(request.args.get('bot-name'))
-            yaml_template = {"apiVersion": "apps/v1", "kind": "Deployment", "metadata": {"name": bot_name}, "spec": {"selector": {"matchLabels": {"app": bot_name}}, "replicas": 1, "template": {"metadata": {"labels": {"app": bot_name}}, "spec": {"containers": [{"name": "application", "image": "index.docker.io/kamiarcoffey/bots-as-a-service:"+bot_name, "imagePullPolicy": "Always", "ports": [{"containerPort": 5000}]}]}}}}
-            storage_client = storage.Client()
-            bucket_name = "deployment-yaml"
-            bucket = storage_client.bucket(bucket_name)        
-            blob = bucket.blob(bot_name)
-            blob.upload_from_string(json.dumps(yaml_template))
+        response_list = [blob.download_as_string() for blob in blobs]
+        
+        print({'bots': response_list})
+        
 
-            return make_response(jsonify({'result': 'ok', 'message':'bot {} registered'.format(bot_name)}), 200)
+    except KeyError as e:
+        print(str(e))
+    except Exception as e:
+        print(str(e))
+        
 
-        except Exception as e:
-            return make_response(jsonify({'error': e}), 500)
-    else:
-        return make_response(jsonify({'error': 'bot-name must be in args'}), 400)
+def test_create_bot():
 
-
-
-def test_register_bot(URL):
-    response = requests.post(url=URL)
-    print("Response Status", response)
-    if (response.status_code == requests.codes.ok):
-        print("Reponse", response.json())
-
-def test_configure_bot(URL):
+    URL = 'https://us-central1-bots-as-a-service.cloudfunctions.net/create_bot'
     
     headers = {
         'Content-Type': 'application/json',
@@ -183,21 +154,50 @@ def test_configure_bot(URL):
 
     with open('bot_configuration.json') as file:
         config = json.load(file)
-        bot = 'TEST'
+        bot = 'hello-python'
         payload = json.dumps({"bot-name": bot, "config":config})
         response = requests.post(url=URL, headers=headers, data=payload)
         print("Response Status", response)
         if (response.status_code == requests.codes.ok):
             print("Reponse", response.json())
 
-def test_activate_bot(URL):
-    response = requests.post(url=URL+'/?bot-name=deployment')
+def test_activate_bot():
+
+    URL = 'https://us-central1-bots-as-a-service.cloudfunctions.net/activate_bot'
+    response = requests.post(url=URL+'/?id=hello-python')
     print("Response Status", response)
     if (response.status_code == requests.codes.ok):
         print("Reponse", response.json())
 
+def test_deactivate_bot():
+
+    URL = 'https://us-central1-bots-as-a-service.cloudfunctions.net/deactivate_bot'
+    response = requests.post(url=URL+'/?id=hello-python')
+    print("Response Status", response)
+    if (response.status_code == requests.codes.ok):
+        print("Reponse", response.json())
+
+def test_deactivate_bot_local(bot_name):
+
+    try:
+        config.load_kube_config('config')
+        k8s_apps_v1 = client.AppsV1Api()
+        api_response = k8s_apps_v1.delete_namespaced_deployment(
+            name=bot_name,
+            namespace="default",
+            body=client.V1DeleteOptions(
+                propagation_policy='Foreground',
+                grace_period_seconds=5))
+        print("Deployment deleted. status='%s'" % str(api_response.status))
+    except Exception as e:
+        print(e)
+
 if __name__ == '__main__':
 
-    test_register_bot('https://us-central1-bots-as-a-service.cloudfunctions.net/register_bot/?bot-name=test')
-    # test_configure_bot('https://us-central1-bots-as-a-service.cloudfunctions.net/configure_bot')
-    # test_activate_bot('https://us-central1-bots-as-a-service.cloudfunctions.net/activate_bot')
+    # test_deactivate_bot_local('hello-python')
+
+    test_get_bots()
+    # test_create_bot()
+    # test_activate_bot()
+    # time.sleep(60)
+    # test_deactivate_bot()

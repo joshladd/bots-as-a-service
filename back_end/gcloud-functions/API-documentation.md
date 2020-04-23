@@ -9,20 +9,23 @@ No auth for dev
 Bot Management on Google Kubernetes Engine
 ---------------------------------
 
-### Send Bot Configuration to Container
+## Create Bot
+### Sends Bot Configuration to Container and generates YAML file to deploy but does not activate the container
 
 #### Require
-
 -	Headers:
 	-	Content-Type: application/json
 -	On Body as json:
 	-	bot-name
 	-	config
 
+#### Returns
+-	bot id
+
 #### Example
 
 ```bash
-curl --request POST 'https://us-central1-bots-as-a-service.cloudfunctions.net/register_configuration' \
+curl --request POST 'https://us-central1-bots-as-a-service.cloudfunctions.net/create_bot' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "bot-name": "test",
@@ -60,7 +63,8 @@ curl --request POST 'https://us-central1-bots-as-a-service.cloudfunctions.net/re
 
 ```json
 {
-    "result": "ok"
+	"result": "ok"
+	"message": {"id": "TEST"
 }
 ```
 
@@ -87,16 +91,15 @@ curl --request POST 'https://us-central1-bots-as-a-service.cloudfunctions.net/re
 ```
 
 ## gcloud commands cheat sheet
+gcloud functions deploy create_bot --runtime python37 --trigger-http --allow-unauthenticated
 gcloud functions deploy activate_bot --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy register_bot --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy configure_bot --runtime python37 --trigger-http --allow-unauthenticated
 gcloud functions deploy deactivate_bot --runtime python37 --trigger-http --allow-unauthenticated
+gcloud functions deploy get_bots --runtime python37 --trigger-http --allow-unauthenticated
+
+gcloud functions deploy delete_bots --runtime python37 --trigger-http --allow-unauthenticated
 
 
-gcloud functions deploy delete_deployment --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy deactivate_bot --runtime python37 --trigger-http --allow-unauthenticated
 
-gcloud functions deploy register_bot --runtime python37 --trigger-http --allow-unauthenticated
 
 ### deploy an function that reads metadata from new objects in storage
 gcloud functions deploy helloworld --runtime python37 --trigger-resource deployment-yaml --trigger-event google.storage.object.finalize
@@ -115,4 +118,9 @@ gcloud container clusters delete cluster bots
 # for just deploy (DOES NOT INCLUDE SERVICES)
 # would need service.yaml
 kubectl apply -f hub-deployment.yaml 
-export GOOGLE_APPLICATION_CREDENTIALS='bots-as-a-service-60111dde3f6d.json'
+export GOOGLE_APPLICATION_CREDENTIALS=bots-as-a-service-60111dde3f6d.json
+
+
+
+gcloud config set account kaco2654@colorado.edu
+gcloud config set project bots-as-a-service
