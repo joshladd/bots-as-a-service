@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 
 import BotDetailsForm from './BotDetailsForm';
 import ServicesForm from './ServicesForm';
-import Review from './Review';
+import BotSummary from './BotSummary';
 import FinishedWorkflow from './FinishedWorkflow';
 
 const useStyles = makeStyles(theme => ({
@@ -56,7 +56,7 @@ function getStepContent(step, ref, payload) {
     case 1:
       return <ServicesForm payload={payload} ref={ref} />;
     case 2:
-      return <Review payload={payload} ref={ref} />;
+      return <BotSummary payload={payload} ref={ref} />;
     default:
       throw new Error('Unknown step');
   }
@@ -64,16 +64,23 @@ function getStepContent(step, ref, payload) {
 
 export default function CreationPortal() {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0); 
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [stepData, setStepData] = React.useState({});
   let ref = React.createRef();
-
-  let stepData = {};
 
   const handleNext = () => {
     let thisStepData = ref.current.returnDataOrNull()
 
     if (thisStepData !== null) {
       stepData[activeStep] = thisStepData;
+      const nextStep = activeStep + 1;
+      // Hacky alarm! If the next is the summary page, send
+      // the entire package.
+      if (nextStep === 3) {
+        let allData = Object.assign({}, stepData);
+        stepData[nextStep] = allData;
+      }
+      setStepData(stepData);
       setActiveStep(activeStep + 1);
     }
     else {

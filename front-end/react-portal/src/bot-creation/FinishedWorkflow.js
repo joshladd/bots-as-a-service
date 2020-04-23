@@ -13,7 +13,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function FinishedWorkflow() {
-  // eslint-disable-next-line
   const classes = useStyles();
 
   return (

@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function ServicePanel({ payload }) {
+export default function ServicePanel({ payload, callback }) {
   const classes = useStyles();
 
   const [isEnabled, setEnabled] = React.useState(payload.defaultOn);
@@ -164,7 +164,6 @@ export default function ServicePanel({ payload }) {
             </Typography>
           </Grid>
         </Grid>
-
       </ExpansionPanelDetails>
     </ExpansionPanel>
   )

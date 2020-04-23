@@ -10,22 +10,28 @@ import RedditTypesCheckboxGroup from './RedditTypes.js';
 
 export default class BotDetailsForm extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = {
-      botData: {},
-      nameInput: {
-        hasError: false,
-        helperText: "the name of your bot.",
-      },
-      typeInput: {
-        hasError: false,
-      },
-      subredditInput: {
-        hasError: true, // Stupid workaround -- just set this to having an error initially to prevent user
-                        // from immediately clicking NEXT
-        helperText: "one or more subreddits to operate in."
+    super(props);
+    console.log(props.payload);
+    if (props.payload === undefined || props.payload === {}){
+      this.state = {
+        botData: {},
+        nameInput: {
+          val: "coolbot",
+          hasError: false,
+          helperText: "the name of your bot.",
+        },
+        typeInput: {
+          hasError: false,
+        },
+        subredditInput: {
+          hasError: true,
+          helperText: "one or more subreddits to operate in.",
+          val: null,
+        }
       }
-    }
+    } else {
+			this.state = props.payload;
+		}
 
     this.onNameInputChange = this.onNameInputChange.bind(this);
     this.onSubredditInputChange = this.onSubredditInputChange.bind(this);
@@ -48,15 +54,10 @@ export default class BotDetailsForm extends React.Component {
     }
 
     let newState = Object.assign({}, this.state);
-    if (!hasError) {
-      newState.botData.name = newValue;
-    }
-    else {
-      newState.botData.name = null;
-    }
     newState.nameInput = {
       hasError: hasError,
       helperText: newHelperText,
+      val: !hasError ? newValue : "",
     }
     this.setState(newState);
   }
@@ -64,8 +65,8 @@ export default class BotDetailsForm extends React.Component {
   onSubredditInputChange(event, value, reason) {
     let newState = Object.assign({}, this.state);
     let hasError = value.length === 0;
-    newState.botData.targets = hasError ? null : value;
-    newState.subredditInput.hasError = hasError
+    newState.subredditInput.hasError = hasError;
+    newState.subredditInput.val = hasError ? null : value;
     this.setState(newState);
   }
 
@@ -77,7 +78,7 @@ export default class BotDetailsForm extends React.Component {
       return null;
     }
     else {
-      let payload = this.state.botData;
+      let payload = this.state;
       return payload;
     }
   }
@@ -101,6 +102,7 @@ export default class BotDetailsForm extends React.Component {
               error={this.state.nameInput.hasError}
               helperText={this.state.nameInput.helperText}
               onChange={this.onNameInputChange}
+              value={this.state.nameInput.val}
               InputProps={{
                 startAdornment: <InputAdornment position="start">/u/</InputAdornment>,
               }}
