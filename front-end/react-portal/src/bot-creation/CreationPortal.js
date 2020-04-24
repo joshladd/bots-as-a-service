@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 
 import BotDetailsForm from './BotDetailsForm';
 import ServicesForm from './ServicesForm';
-import Review from './Review';
+import BotSummary from './BotSummary';
 import FinishedWorkflow from './FinishedWorkflow';
 
 const useStyles = makeStyles(theme => ({
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
+      width: 1000,
       marginLeft: 'auto',
       marginRight: 'auto',
     },
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const steps = ['details', 'services', 'review'];
+const steps = ['details', 'services', 'review', 'finished'];
 
 function getStepContent(step, ref, payload) {
   switch (step) {
@@ -56,7 +56,9 @@ function getStepContent(step, ref, payload) {
     case 1:
       return <ServicesForm payload={payload} ref={ref} />;
     case 2:
-      return <Review payload={payload} ref={ref} />;
+      return <BotSummary payload={payload} ref={ref} />;
+    case 3:
+      return <FinishedWorkflow payload={payload} />;
     default:
       throw new Error('Unknown step');
   }
@@ -65,17 +67,26 @@ function getStepContent(step, ref, payload) {
 export default function CreationPortal() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
+  const [stepData, setStepData] = React.useState({});
   let ref = React.createRef();
-
-  let stepData = {};
 
   const handleNext = () => {
     let thisStepData = ref.current.returnDataOrNull()
 
     if (thisStepData !== null) {
       stepData[activeStep] = thisStepData;
+      const nextStep = activeStep + 1;
+      // Hacky alarm! If the next is the summary page, send
+      // the entire package.
+      if (nextStep >= 2) {
+        let allData = Object.assign({}, stepData);
+        stepData[nextStep] = allData;
+      }
+      setStepData(stepData);
       setActiveStep(activeStep + 1);
-      console.log(stepData);
+    }
+    else {
+      console.log("didn't get any data; forcing stop.");
     }
   };
 
@@ -100,28 +111,26 @@ export default function CreationPortal() {
             ))}
           </Stepper>
           <React.Fragment>
-            {activeStep === steps.length ? (
-              <FinishedWorkflow />
-            ) : (
-              <React.Fragment>
+             <React.Fragment>
                 {getStepContent(activeStep, ref, stepData[activeStep])}
                 <div className={classes.buttons}>
-                  {activeStep !== 0 && (
+                  {activeStep !== 0 && activeStep !== steps.length - 1 && (
                     <Button onClick={handleBack} className={classes.button}>
                       Back
                     </Button>
                   )}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? 'submit' : 'next'}
-                  </Button>
+                  {activeStep !== steps.length - 1 && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleNext}
+                      className={classes.button}
+                    >
+                      {activeStep === 2 ? 'submit' : 'next'}
+                    </Button>
+                  )}
                 </div>
               </React.Fragment>
-            )}
           </React.Fragment>
         </Paper>
       </main>
