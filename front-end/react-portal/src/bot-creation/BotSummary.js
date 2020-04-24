@@ -25,7 +25,9 @@ function ServiceRow ({ props, name }) {
 
   const getInputsItem = () => {
     if (props.inputs !== undefined) {
-      return <li>test</li>;
+      return (Object.entries(props.inputs).map(([k, v]) =>{
+				return <li key={k}>{k}: {v.val}</li>;
+			}))
     }
   }
 
@@ -66,7 +68,6 @@ class BotSummary extends React.Component {
 
   returnDataOrNull () {
     return this.botData;
-    //return null;
   }
 
   createServiceRow([serviceName, serviceConfigs]) {

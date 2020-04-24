@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useEffect } from 'react';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
@@ -7,14 +6,11 @@ import Grow from '@material-ui/core/Grow';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
-import {
-  Link
-} from "react-router-dom";
-
 function StatusPanel({ payload }) {
   const [stage, setStage] = React.useState(0);
   const [hasError, setHasError] = React.useState(false);
   const [currentErrorMessage, setErrorMessage] = React.useState("oh no! an unknown error has occurred.");
+  const [makingRequest, setMakingRequest] = React.useState(false);
 
   const handleLifeCycle = () => {
     switch(stage) {
@@ -25,12 +21,27 @@ function StatusPanel({ payload }) {
         setStage(stage + 1);
         break;
       case 2:
-        setStage(stage + 1);
+        if (!makingRequest) {
+          setMakingRequest(true);
+          fetch("https://us-central1-bots-as-a-service.cloudfunctions.net/create-bot", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+          }).then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              setStage(stage + 1);
+            })
+        }
         break;
       case 3:
         setStage(stage + 1);
         break;
       case 4:
+        setMakingRequest(false);
         break;
       default:
         setErrorMessage("oh no! you have somehow escaped our lifecycle through mysterious means. please try again.");
@@ -42,11 +53,11 @@ function StatusPanel({ payload }) {
   useEffect(() => {
     setTimeout(function () {handleLifeCycle()}, 1000);
   })
-  
+
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} sm={12}>
-        <Grow in={stage >= 0 && stage != 4} timeout={500}>
+        <Grow in={stage >= 0 && stage !== 4} timeout={500}>
           <LinearProgress />
         </Grow>
       </Grid>
@@ -90,45 +101,12 @@ function StatusPanel({ payload }) {
   );
 }
 
-export default function FinishedWorkflow({ props }) {
+export default function FinishedWorkflow({ payload }) {
   const transformData = () => {
-
-    const data = {
-      0: {
-        botData: {},
-        nameInput: {val: "coolbot", hasError: false, helperText: "the name of your bot."},
-        typeInput: {hasError: false},
-        subredditInput: {
-          hasError: false,
-          helperText: "one or more subreddits to operate in.",
-          val: ["test", "test2"]
-        },
-      },
-      1: {
-        alertShown: false,
-        fandom: {hasError: false, isEnabled: false, isAvailable: true, invocation: {
-          symbol: "!",
-          term: "fandom",
-          query: "[[ ]]"
-        }, inputs: {
-          fandom_name: {
-            isErrored: false,
-            val: "baas",
-          }
-        }},
-        translate: {hasError: false, isEnabled: true, isAvailable: true,
-          invocation: {
-            symbol: "!",
-            term: "translate",
-            query: "[[ ]]",
-          }
-      },
-        flights: {hasError: false, isEnabled: false, isAvailable: false},
-      }
-    }
-
+    const data = payload;
+    const botName = data[0].nameInput.val;
     let newData = {
-      name: data[0].nameInput.val,
+      name: botName,
       auth: {
         username: "testing_dummy",
         password: "leo030811",
@@ -170,9 +148,14 @@ export default function FinishedWorkflow({ props }) {
         }
         newData.services.push(thisServiceData);
       }
+      return null
     });
 
-    return newData;
+    let newPayload = {
+      "bot-name": botName,
+      "config": newData,
+    }
+    return newPayload;
   }
 
   return (

@@ -66,7 +66,7 @@ function getStepContent(step, ref, payload) {
 
 export default function CreationPortal() {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(3);
+  const [activeStep, setActiveStep] = React.useState(0);
   const [stepData, setStepData] = React.useState({});
   let ref = React.createRef();
 
@@ -78,7 +78,7 @@ export default function CreationPortal() {
       const nextStep = activeStep + 1;
       // Hacky alarm! If the next is the summary page, send
       // the entire package.
-      if (nextStep === 2) {
+      if (nextStep >= 2) {
         let allData = Object.assign({}, stepData);
         stepData[nextStep] = allData;
       }

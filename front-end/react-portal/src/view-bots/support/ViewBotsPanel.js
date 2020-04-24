@@ -14,9 +14,24 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 
+import Grid from '@material-ui/core/Grid';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
 const useStyles = makeStyles(theme => ({
 	root: {
     width: '100%',
+  },
+	enabledBotSummary: {
+		backgroundColor: theme.palette.success.dark,
+	},
+	header: {
+    backgroundColor: theme.palette.background.default
   },
   heading: {
     fontSize: theme.typography.pxToRem(16),
@@ -41,32 +56,119 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ViewBotsPanel(props){
+function ServiceRow ({ name, payload }) {
+
+  const getInputsItem = () => {
+    if (typeof payload.params === "object") {
+			return (Object.entries(payload.params).map(([k, v]) =>{
+				return <li key={k}>{k}: {v}</li>;
+			}))
+    }
+  }
+
+  const getInvocationItem = () => {
+    if (payload.invocation !== undefined) {
+      return (
+        <li>
+          invocation:
+          <code>
+          { " " + payload.invocation.symbol + payload.invocation.term }
+          { payload.invocation.query.replace(" ", "search-term") }
+          </code>
+        </li>
+      );
+    }
+  }
+
+  return (
+    <TableRow>
+      <TableCell component="th" scope="row">{ name }</TableCell>
+      <TableCell>
+        <ul>
+          { getInputsItem() }
+          { getInvocationItem() }
+        </ul>
+      </TableCell>
+    </TableRow>
+  )
+}
+
+export default function ViewBotsPanel({payload}){
 	const classes = useStyles();
-	const botName = props.payload.name;
-	const isOnline = props.payload.status.online;
+	const isOnline = !payload.status.online;
 
 	const enabledStatusLabel = isOnline ? 'disabled' : 'active';
 
 	const isPlayButtonDisabled = !isOnline;
 	const isPauseButtonDisabled = !isPlayButtonDisabled;
 
+	const createServiceRow = (serviceConfigs) => {
+		const serviceName = serviceConfigs.service_name
+    return <ServiceRow key={serviceName} payload={serviceConfigs} name={serviceName} />;
+
+  }
+
+
 	return (
 		<ExpansionPanel>
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
+				className={ isOnline ? null : classes.enabledBotSummary  }
         aria-controls="panel1a-content"
-        id={botName + "-header"}
+        id={ payload.name + "-header" }
       >
-        <Typography className={classes.heading}>{botName}</Typography>
+        <Typography className={classes.heading}>{ payload.name }</Typography>
         <Typography className={classes.secondaryHeading}>{enabledStatusLabel}</Typography>
 				<Divider orientation="vertical" flexItem />
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <Typography>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-          sit amet blandit leo lobortis eget.
-        </Typography>
+			<Grid container spacing={2}>
+				<Grid item xs={4} sm={4}>
+					<TableContainer component={Paper}>
+						<Table className={classes.header} aria-label="simple table">
+							<caption>bot data</caption>
+							<TableHead>
+								<TableRow>
+									<TableCell><Typography variant="h6">key</Typography></TableCell>
+									<TableCell align="right"><Typography variant="h6">value</Typography></TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+							<TableRow>
+								<TableCell component="th" scope="row">name</TableCell>
+								<TableCell align="right">{ payload.name }</TableCell>
+							</TableRow>
+							<TableRow>
+								<TableCell component="th" scope="row">enabled for</TableCell>
+								<TableCell align="right">subreddits</TableCell>
+							</TableRow>
+							<TableRow>
+								<TableCell component="th" scope="row">targets</TableCell>
+								<TableCell align="right">
+									{payload.subreddits.join(', ')}
+								</TableCell>
+							</TableRow>
+							</TableBody>
+						</Table>
+					</TableContainer>
+				</Grid>
+				<Grid item xs={8} sm={8}>
+					<TableContainer component={Paper}>
+						<Table className={classes.header} aria-label="simple table">
+							<caption>services data</caption>
+							<TableHead>
+								<TableRow>
+								<TableCell><Typography variant="h6">enabled services</Typography></TableCell>
+								<TableCell><Typography variant="h6">configurations</Typography></TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{ payload.services.map(createServiceRow) }
+							</TableBody>
+						</Table>
+					</TableContainer>
+				</Grid>
+			</Grid>
       </ExpansionPanelDetails>
       <Divider />
       <ExpansionPanelActions>
