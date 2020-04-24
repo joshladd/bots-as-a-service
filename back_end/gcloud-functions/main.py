@@ -77,10 +77,10 @@ def create_bot(request):
         config = json_data.get("config")
 
         if config == None:
-            return jsonify({"result": "fail", "message": "no valid config"}), 400
+            return jsonify({"result": "fail", "message": "no valid config"}), 400, GLOBAL_HEADERS
 
         if bot_name == None:
-            return jsonify({"result": "fail", "message": "no valid name"}), 400
+            return jsonify({"result": "fail", "message": "no valid name"}), 400, GLOBAL_HEADERS
 
         bot_id = bot_name
         # uuid here
