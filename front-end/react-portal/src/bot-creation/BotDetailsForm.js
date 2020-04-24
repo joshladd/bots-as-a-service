@@ -11,7 +11,6 @@ import RedditTypesCheckboxGroup from './RedditTypes.js';
 export default class BotDetailsForm extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props.payload);
     if (props.payload === undefined || props.payload === {}){
       this.state = {
         botData: {},
@@ -25,7 +24,7 @@ export default class BotDetailsForm extends React.Component {
         },
         subredditInput: {
           hasError: true,
-          helperText: "one or more subreddits to operate in.",
+          helperText: "one or more subreddits to operate in. press enter in between entries.",
           val: null,
         }
       }
@@ -112,10 +111,11 @@ export default class BotDetailsForm extends React.Component {
           <Grid item xs={12}>
             <Autocomplete
               required
+              freeSolo
               multiple
               selectOnFocus
-              onChange={this.onSubredditInputChange}
-              options={subreddits}
+              onChange={ this.onSubredditInputChange }
+              options={ basicSubreddits }
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
                   <Chip variant="outlined" label={"/r/" + option} {...getTagProps({ index })} />
@@ -135,10 +135,6 @@ export default class BotDetailsForm extends React.Component {
   }
 }
 
-// STUB DATA
-const subreddits = [
-  "test",
-  "test1",
-  "test2",
-  "test3"
+const basicSubreddits = [
+  "botsasaservice_test",
 ]

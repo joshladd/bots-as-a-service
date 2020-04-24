@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const steps = ['details', 'services', 'review'];
+const steps = ['details', 'services', 'review', 'finished'];
 
 function getStepContent(step, ref, payload) {
   switch (step) {
@@ -57,6 +57,8 @@ function getStepContent(step, ref, payload) {
       return <ServicesForm payload={payload} ref={ref} />;
     case 2:
       return <BotSummary payload={payload} ref={ref} />;
+    case 3:
+      return <FinishedWorkflow payload={payload} />;
     default:
       throw new Error('Unknown step');
   }
@@ -64,7 +66,7 @@ function getStepContent(step, ref, payload) {
 
 export default function CreationPortal() {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(3);
   const [stepData, setStepData] = React.useState({});
   let ref = React.createRef();
 
@@ -76,7 +78,7 @@ export default function CreationPortal() {
       const nextStep = activeStep + 1;
       // Hacky alarm! If the next is the summary page, send
       // the entire package.
-      if (nextStep === 3) {
+      if (nextStep === 2) {
         let allData = Object.assign({}, stepData);
         stepData[nextStep] = allData;
       }
@@ -109,28 +111,26 @@ export default function CreationPortal() {
             ))}
           </Stepper>
           <React.Fragment>
-            {activeStep === steps.length ? (
-              <FinishedWorkflow />
-            ) : (
-              <React.Fragment>
+             <React.Fragment>
                 {getStepContent(activeStep, ref, stepData[activeStep])}
                 <div className={classes.buttons}>
-                  {activeStep !== 0 && (
+                  {activeStep !== 0 && activeStep !== steps.length - 1 && (
                     <Button onClick={handleBack} className={classes.button}>
                       Back
                     </Button>
                   )}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? 'submit' : 'next'}
-                  </Button>
+                  {activeStep !== steps.length - 1 && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleNext}
+                      className={classes.button}
+                    >
+                      {activeStep === 2 ? 'submit' : 'next'}
+                    </Button>
+                  )}
                 </div>
               </React.Fragment>
-            )}
           </React.Fragment>
         </Paper>
       </main>
