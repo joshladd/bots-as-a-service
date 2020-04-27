@@ -23,6 +23,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import Alert from '@material-ui/lab/Alert';
+
 const useStyles = makeStyles(theme => ({
 	root: {
     width: '100%',
@@ -54,6 +59,10 @@ const useStyles = makeStyles(theme => ({
 	deleteButton: {
   	color: theme.palette.error.dark,
   },
+	backdrop: {
+	 	zIndex: theme.zIndex.drawer + 1,
+	 	color: '#fff',
+	},
 }));
 
 function ServiceRow ({ name, payload }) {
@@ -95,18 +104,116 @@ function ServiceRow ({ name, payload }) {
 
 export default function ViewBotsPanel({payload}){
 	const classes = useStyles();
+
+	// Global "is this panel processing something."
+	const [isProcessing, setIsProcessing] = React.useState(false);
+	const [alertStatus, setAlertStatus] = React.useState({
+		severity: "error",
+		message: ""
+	});
+
 	const isOnline = !payload.status.online;
 
 	const enabledStatusLabel = isOnline ? 'disabled' : 'active';
 
 	const isPlayButtonDisabled = !isOnline;
 	const isPauseButtonDisabled = !isPlayButtonDisabled;
+	const isDeleteButtonDisabled = isPlayButtonDisabled;
 
 	const createServiceRow = (serviceConfigs) => {
 		const serviceName = serviceConfigs.service_name
     return <ServiceRow key={serviceName} payload={serviceConfigs} name={serviceName} />;
-
   }
+
+	const processStartButton = (event) => {
+		event.preventDefault();
+		if (!isProcessing) {
+			setIsProcessing(true);
+			fetch(`https://us-central1-bots-as-a-service.cloudfunctions.net/activate-bot`, {
+				method: "put",
+				body: `{"id": "${payload.name}"}`,
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw response.text;
+					}
+					return response.json();
+				})
+				.then((data) => {
+					console.log(data);
+					setIsProcessing(false);
+					setAlertStatus({
+						severity: "error",
+						message: "",
+					})
+				})
+				.catch(err => {
+					console.log(err);
+					setAlertStatus({
+						severity: "error",
+						message: "Could not start bot: " + err,
+					})
+					setIsProcessing(false);
+			  })
+		}
+	}
+
+	const processDisableButton = (event) => {
+		event.preventDefault();
+		if (!isProcessing) {
+			setIsProcessing(true);
+			fetch(`https://us-central1-bots-as-a-service.cloudfunctions.net/deactivate-bot`, {
+				method: "put",
+				body: `{"id": "${payload.name}"}`,
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw response.text;
+					}
+					return response.json();
+				})
+				.then((data) => {
+					console.log(data);
+					setIsProcessing(false);
+					setAlertStatus({
+						severity: "error",
+						message: "",
+					})
+				})
+				.catch(err => {
+					setIsProcessing(false);
+					setAlertStatus({
+						severity: "error",
+						message: "Could not disable bot: " + err,
+					})
+			  })
+		}
+	}
+
+	const processDeleteButton = (event) => {
+		event.preventDefault();
+		if (!isProcessing) {
+			setIsProcessing(true);
+			fetch(`https://us-central1-bots-as-a-service.cloudfunctions.net/delete-bot`, {
+				method: "delete",
+				body: `{"id": "${payload.name}"}`,
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw response.text;
+					}
+					setIsProcessing(false);
+					window.location.reload();
+				})
+				.catch(err => {
+					setIsProcessing(false);
+					setAlertStatus({
+						severity: "error",
+						message: "Could not delete bot: " + err,
+					})
+			  })
+		}
+	}
 
 
 	return (
@@ -122,7 +229,14 @@ export default function ViewBotsPanel({payload}){
 				<Divider orientation="vertical" flexItem />
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
+			<Backdrop className={classes.backdrop} open={isProcessing}>
+			  <CircularProgress color="inherit" />
+			</Backdrop>
+
 			<Grid container spacing={2}>
+				<Grid item xs={12} sm={12}>
+				{ alertStatus.message.length > 0 ? <Alert severity={alertStatus.severity}>{alertStatus.message}</Alert> : null}
+				</Grid>
 				<Grid item xs={4} sm={4}>
 					<TableContainer component={Paper}>
 						<Table className={classes.header} aria-label="simple table">
@@ -172,13 +286,28 @@ export default function ViewBotsPanel({payload}){
       </ExpansionPanelDetails>
       <Divider />
       <ExpansionPanelActions>
-      	<Button className={classes.startButton} startIcon={<PlayArrowIcon />} disabled={isPlayButtonDisabled}>
+      	<Button
+					className={classes.startButton}
+					onClick={processStartButton}
+					startIcon={<PlayArrowIcon />}
+					disabled={isPlayButtonDisabled}
+				>
 	        Start
 	      </Button>
-	      <Button className={classes.pauseButton} startIcon={<PauseIcon />} disabled={isPauseButtonDisabled}>
+	      <Button
+					className={classes.pauseButton}
+					onClick={processDisableButton}
+					startIcon={<PauseIcon />}
+					disabled={isPauseButtonDisabled}
+				>
 	        Disable
 	      </Button>
-        <Button className={classes.deleteButton} startIcon={<DeleteIcon />}>
+        <Button
+					className={classes.deleteButton}
+					onClick={processDeleteButton}
+					startIcon={<DeleteIcon />}
+					disabled={isDeleteButtonDisabled}
+				>
 	        Delete
 	      </Button>
       </ExpansionPanelActions>

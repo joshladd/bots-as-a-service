@@ -5,11 +5,13 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Alert from '@material-ui/lab/Alert';
 
 import ViewBotsPanel from './support/ViewBotsPanel';
 
 
 export default function ViewBotsPortal(){
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		document.title = 'bots-as-a-service: bots';
 		if (!loadedIn) {
@@ -17,6 +19,11 @@ export default function ViewBotsPortal(){
 				setIsLoading(true);
 				fetch("https://us-central1-bots-as-a-service.cloudfunctions.net/get-bots")
 					.then((response) => {
+						if (!response.ok) {
+							setAlertStatus({severity: "error", message: response.text});
+							setLoadedIn(true);
+							setIsLoading(false);
+						}
 						return response.json();
 					})
 					.then((data) => {
@@ -24,12 +31,11 @@ export default function ViewBotsPortal(){
 							<ViewBotsPanel key={payload.name} payload={payload} />
 						))
 						setLoadedIn(true);
+						setAlertStatus({
+							severity: "error",
+							message: "",
+						})
 					})
-
-				// setBotsList(fakeResponse.map((payload) =>
-			 	// 	<ViewBotsPanel key={payload.name} payload={payload} />
-			 	// ))
-				// setLoadedIn(true);
 			}
 		}
 	})
@@ -38,6 +44,10 @@ export default function ViewBotsPortal(){
 	// Flag to ensure only one thread starts making network requests + loading data.
 	const [isLoading, setIsLoading] = React.useState(false);
 	const [botsList, setBotsList] = React.useState([]);
+	const [alertStatus, setAlertStatus] = React.useState({
+		severity: "info",
+		message: "grabbing bot data..."
+	});
 
 	return (
 		<React.Fragment>
@@ -46,7 +56,11 @@ export default function ViewBotsPortal(){
 				<Typography variant="h3" gutterBottom>
 					bots
 				</Typography>
-				{	loadedIn ? botsList : (
+				{ alertStatus.message.length > 0 ? <Alert severity={alertStatus.severity}>{alertStatus.message}</Alert> : null}
+				{	loadedIn ?
+						botsList.length > 0 ? botsList
+						: <Typography variant="caption">no bots yet. create one!</Typography>
+					 : (
 					<Container>
 						<ExpansionPanel>
 							<ExpansionPanelSummary>
@@ -79,89 +93,3 @@ export default function ViewBotsPortal(){
 		</React.Fragment>
 	);
 }
-
-// STUB
-const fakeResponse = [
-	{
-	  "name": "example-on",
-	  "auth": {
-	      "client_id": "B-pVZ2UJucTJ7Q",
-	      "client_secret": "bS9f3mP6oeeMUy7eWkksohwoazs",
-	      "password": "leo030811",
-	      "user_agent": "bot for testing other bots",
-	      "username": "testing_dummy"
-	  },
-	  "services": [
-	    {
-	      "language": "english",
-	      "invocation": {
-	        "symbol": "!",
-	        "term": "fandom",
-	        "query": "[[ ]]"
-	      },
-	      "params": {
-	        "url": "https://naruto.fandom.com/"
-	      },
-	      "service_name": "fandom"
-	    },
-	    {
-	      "language": "english",
-	      "invocation": {
-	        "symbol": "!",
-	        "term": "translate",
-	        "query": "[[ ]]"
-	      },
-	      "params": {
-	        "default_language": "english"
-	      },
-	      "service_name": "translate"
-	    }
-	  ],
-	  "status": {
-	    "online": true
-	  },
-	  "subreddits": [
-	    "botsasaservice_test"
-	  ],
-	  "version_info": {
-	    "description": "A bot to be a test account for our bot platform",
-	    "name": "BaaS testing bot",
-	    "version": "v1.0"
-	  }
-	},
-	{
-	  "name": "example-off",
-	  "auth": {
-	      "client_id": "B-pVZ2UJucTJ7Q",
-	      "client_secret": "bS9f3mP6oeeMUy7eWkksohwoazs",
-	      "password": "leo030811",
-	      "user_agent": "bot for testing other bots",
-	      "username": "testing_dummy"
-	  },
-	  "services": [
-	    {
-	      "language": "english",
-	      "invocation": {
-	        "symbol": "!",
-	        "term": "fandom",
-	        "query": "[[ ]]"
-	      },
-	      "params": {
-	        "url": "https://naruto.fandom.com/"
-	      },
-	      "service_name": "fandom"
-	    }
-	  ],
-	  "status": {
-	    "online": false
-	  },
-	  "subreddits": [
-	    "botsasaservice_test"
-	  ],
-	  "version_info": {
-	    "description": "A bot to be a test account for our bot platform",
-	    "name": "BaaS testing bot",
-	    "version": "v1.0"
-	  }
-	}
-]
