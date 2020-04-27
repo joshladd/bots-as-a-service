@@ -198,25 +198,41 @@ def deactivate_bot(request):
         print(f"Now attempting to deactivate bot ID: {bot_id}")
         if bot_id is None:
             return _create_response("no valid 'id' in request body.", 400)
+        
+        
+        try:
+            storage_client = storage.Client()
+            bucket = storage_client.get_bucket('bot-configurations')
+            blob = bucket.blob(bot_id)
+            config_file = json.loads(blob.download_as_string(client=None).decode("utf-8"))
+            config_file['status']['online'] = False
+            blob.upload_from_string(json.dumps(config_file,indent=2))
+        except Exception as idk:
+            print(str(idk))
+        
+    
         try:
             kube.config.load_kube_config("config")
             k8s_apps_v1 = kube.client.AppsV1Api()
             resp = k8s_apps_v1.delete_namespaced_deployment(
-                name=bot_name,
+                name=bot_id,
                 namespace="default",
-                body=client.V1DeleteOptions(
+                body=kube.client.V1DeleteOptions(
                     propagation_policy="Foreground", grace_period_seconds=5
                 ),
             )
 
             status = "deployment deleted. status: '{}".format(resp.metadata.name)
+
+            
+
             return jsonify({"message": status}), 200, GLOBAL_HEADERS
         except ApiException as error:
-            return _create_error_response("could not create deployment", err)
+            return _create_error_response("could not create deployment", error)
         except NotFound as nf:
             return _create_response(f"could not find bot with id: {bot_id}", 404)
-        except Exception as err:
-            return _create_error_response("unexpected error", err)
+        except Exception as error:
+            return _create_error_response("unexpected error", error)
 
 def delete_bot(request):
     result = _handle_request(request, "DELETE")
@@ -251,5 +267,50 @@ def delete_bot(request):
         else:
             return _create_response("", 204)
 
+
+
 if __name__ == "__main__":
+    # bot_id = 'test-bot'
+    # storage_client = storage.Client()
+    # bucket = storage_client.get_bucket("deployment-yaml")
+    # bot_yaml = str(bot_id)
+    # blob = bucket.blob(bot_yaml)
+    # contents = blob.download_as_string()
+    # print(f"Found deployment yaml file with contents: {contents}")
+    # dep = yaml.safe_load(contents)
+
+    # print(f"Now loading kubeconfig configuration object...")
+    # kube.config.load_kube_config("config")
+
+    # print(f"Now connecting to K8s.")
+    # k8s_apps_v1 = kube.client.AppsV1Api()
+    # print(f"Connected to client; creating deployment.")
+    # resp = k8s_apps_v1.create_namespaced_deployment(body=dep, namespace="default")
+
+    # status = "deployment created. status: {}".format(resp.metadata.name)
+    # print(status)
+
+
+    # kube.config.load_kube_config("config")
+    # k8s_apps_v1 = kube.client.AppsV1Api()
+    # resp = k8s_apps_v1.delete_namespaced_deployment(
+    #     name=bot_id,
+    #     namespace="default",
+    #     body=kube.client.V1DeleteOptions(
+    #         propagation_policy="Foreground", grace_period_seconds=5
+    #     ),
+    # )
+
+    # print(dir(resp.metadata))
+
+    # status = "deployment deleted. status: '{}".format(resp.metadata.name)
+
+    # storage_client = storage.Client()
+    # bucket = storage_client.get_bucket('bot-configurations')
+    # blob = bucket.get_blob(bot_id)
+    # config_file = json.loads(blob.download_as_string(client=None).decode("utf-8"))
+    # config_file['status']['online'] = False
+    # blob.upload_from_string(json.dumps(config_file,indent=2))
+
+    # print(status)
     pass
