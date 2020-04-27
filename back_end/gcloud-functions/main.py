@@ -110,7 +110,7 @@ def create_bot(request):
             blob.upload_from_string(json.dumps(config))
 
             """Upload a file to the bucket."""
-            yaml_template = {
+                        yaml_template = {
                 "apiVersion": "apps/v1",
                 "kind": "Deployment",
                 "metadata": {"name": bot_name},
@@ -123,7 +123,13 @@ def create_bot(request):
                             "containers": [
                                 {
                                     "name": "application",
-                                    "image": "index.docker.io/kamiarcoffey/bots-as-a-service:latest",
+                                    "image": "index.docker.io/kamiarcoffey/bots-as-a-service:bot",
+                                    "env": [
+                                        {
+                                            "name": "bucket",
+                                            "value": bot_id
+                                        }
+                                    ],
                                     "imagePullPolicy": "Always",
                                     "ports": [{"containerPort": 5000}],
                                 }
