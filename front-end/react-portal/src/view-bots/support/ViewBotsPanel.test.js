@@ -2,37 +2,64 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ViewBotsPanel from './ViewBotsPanel';
 
-test('renders expected elements default unexpanded', () => {
-  const testBotName = "test-bot-01";
-  const payload = {
-    "name": testBotName,
-    "auth" : {
-        "client_id": "",
-        "client_secret" : "",
-        "user_agent" : "",
-        "username": ""
+const testBotName = "test-bot";
+const testPayload = {
+  name: testBotName,
+  auth: {
+      "client_id": "id",
+      "client_secret": "sekret",
+      "password": "test",
+      "user_agent": "test",
+      "username": "test"
+  },
+  services: [
+    {
+      language: "english",
+      invocation: {
+        "symbol": "!",
+        "term": "fandom",
+        "query": "[[ ]]"
+      },
+      params: {
+        "url": "https://naruto.fandom.com/"
+      },
+      service_name: "fandom"
     },
-    "status" : {
-        "online": false,
-        "valid": false
-    },
-    "config" : {
-        "valid": true,
-        "subreddits" : ["test"],
-        "comments_enabled": true,
-        "livestream_enabled": false,
-        "comment_calling_syntax" : "!",
-        "services": []
+    {
+      language: "english",
+      invocation: {
+        "symbol": "!",
+        "term": "translate",
+        "query": "[[ ]]"
+      },
+      params: {
+        "default_language": "english"
+      },
+      service_name: "translate"
     }
+  ],
+  status: {
+    online: false
+  },
+  subreddits: [
+    "botsasaservice_test"
+  ],
+  version_info: {
+    description: "A bot to be a test account for our bot platform",
+    name: "BaaS testing bot",
+    version: "v1.0"
   }
-  const { container } = render(<ViewBotsPanel payload={payload} />);
-  const botHeaderPanel = screen.getByText(testBotName);
-  expect(botHeaderPanel).toBeVisible();
+}
 
-  // Quick-action menu is visible when unexpanded
-  expect(screen.getByRole('button', {name: 'start-bot'})).toBeVisible();
-  expect(screen.getByRole('button', {name: 'pause-bot'})).toBeVisible();
-  expect(screen.getByRole('button', {name: 'delete-bot'})).toBeVisible();
+
+
+test('renders expected elements default unexpanded', () => {
+  const payload = testPayload;
+  const { container } = render(<ViewBotsPanel payload={payload} />);
+
+  const botHeaderPanel = screen.getAllByText(testBotName)[0];
+
+  expect(botHeaderPanel).toBeVisible();
 
   // Bottom row buttons are not visible when unexpanded
   expect(screen.getByRole('button', {name: 'Start'})).not.toBeVisible();
@@ -41,38 +68,11 @@ test('renders expected elements default unexpanded', () => {
 });
 
 test('renders expected elements expanded', () => {
-  const testBotName = "test-bot-01";
-  const payload = {
-    "name": testBotName,
-    "auth" : {
-        "client_id": "",
-        "client_secret" : "",
-        "user_agent" : "",
-        "username": ""
-    },
-    "status" : {
-        "online": false,
-        "valid": false
-    },
-    "config" : {
-        "valid": true,
-        "subreddits" : ["test"],
-        "comments_enabled": true,
-        "livestream_enabled": false,
-        "comment_calling_syntax" : "!",
-        "services": []
-    }
-  }
+  const payload = testPayload;
   const { container } = render(<ViewBotsPanel payload={payload} />);
-  const botHeaderPanel = screen.getByText(testBotName);
-  expect(botHeaderPanel).toBeVisible();
+  const botHeaderPanel = screen.getAllByText(testBotName)[0]
 
   fireEvent.click(botHeaderPanel);
-
-  // Quick-action menu is visible when unexpanded
-  expect(screen.getByRole('button', {name: 'start-bot'})).toBeVisible();
-  expect(screen.getByRole('button', {name: 'pause-bot'})).toBeVisible();
-  expect(screen.getByRole('button', {name: 'delete-bot'})).toBeVisible();
 
   // Bottom row buttons are not visible when unexpanded
   expect(screen.getByRole('button', {name: 'Start'})).toBeVisible();

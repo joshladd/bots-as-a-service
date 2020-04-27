@@ -221,7 +221,7 @@ export default function ViewBotsPanel({payload}){
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
 				className={ isOnline ? null : classes.enabledBotSummary  }
-        aria-controls="panel1a-content"
+        aria-controls={ payload.name + "-content" }
         id={ payload.name + "-header" }
       >
         <Typography className={classes.heading}>{ payload.name }</Typography>
