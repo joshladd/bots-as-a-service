@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/bots-as-a-service/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/bots-as-a-service/static/js/main.a5cb3d68.chunk.js",
-    "main.js.map": "/bots-as-a-service/static/js/main.a5cb3d68.chunk.js.map",
+    "main.js": "/bots-as-a-service/static/js/main.b24facfe.chunk.js",
+    "main.js.map": "/bots-as-a-service/static/js/main.b24facfe.chunk.js.map",
     "runtime-main.js": "/bots-as-a-service/static/js/runtime-main.45ad9cc6.js",
     "runtime-main.js.map": "/bots-as-a-service/static/js/runtime-main.45ad9cc6.js.map",
-    "static/js/2.95534465.chunk.js": "/bots-as-a-service/static/js/2.95534465.chunk.js",
-    "static/js/2.95534465.chunk.js.map": "/bots-as-a-service/static/js/2.95534465.chunk.js.map",
+    "static/js/2.7e7feff3.chunk.js": "/bots-as-a-service/static/js/2.7e7feff3.chunk.js",
+    "static/js/2.7e7feff3.chunk.js.map": "/bots-as-a-service/static/js/2.7e7feff3.chunk.js.map",
     "index.html": "/bots-as-a-service/index.html",
-    "precache-manifest.840f7372acde32ddfd0f32f0bc55c53e.js": "/bots-as-a-service/precache-manifest.840f7372acde32ddfd0f32f0bc55c53e.js",
+    "precache-manifest.bd29f46c23d33eaa2c1c06b8fcdf2368.js": "/bots-as-a-service/precache-manifest.bd29f46c23d33eaa2c1c06b8fcdf2368.js",
     "service-worker.js": "/bots-as-a-service/service-worker.js",
     "static/css/main.5ecd60fb.chunk.css.map": "/bots-as-a-service/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.95534465.chunk.js.LICENSE.txt": "/bots-as-a-service/static/js/2.95534465.chunk.js.LICENSE.txt"
+    "static/js/2.7e7feff3.chunk.js.LICENSE.txt": "/bots-as-a-service/static/js/2.7e7feff3.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.45ad9cc6.js",
-    "static/js/2.95534465.chunk.js",
+    "static/js/2.7e7feff3.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.a5cb3d68.chunk.js"
+    "static/js/main.b24facfe.chunk.js"
   ]
 }
