@@ -110,7 +110,7 @@ def create_bot(request):
             blob.upload_from_string(json.dumps(config))
 
             """Upload a file to the bucket."""
-                        yaml_template = {
+            yaml_template = {
                 "apiVersion": "apps/v1",
                 "kind": "Deployment",
                 "metadata": {"name": bot_name},
