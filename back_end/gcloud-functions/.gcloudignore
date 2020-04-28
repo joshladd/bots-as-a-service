@@ -12,6 +12,10 @@
 # below:
 .git
 .gitignore
+test.py
+baas.json
+API-documentations.md
+bot-configurations.json
 
 node_modules
 #!include:.gitignore

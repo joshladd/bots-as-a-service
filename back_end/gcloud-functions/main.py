@@ -1,11 +1,9 @@
+""" Main API. """
 import yaml
 import json
-import requests
-import time
 
-from flask import make_response, jsonify, abort
+from flask import jsonify, abort
 from google.cloud import storage
-from google.cloud import container_v1
 from google.cloud.exceptions import NotFound
 import kubernetes as kube
 from kubernetes.client.rest import ApiException
@@ -19,6 +17,7 @@ GLOBAL_HEADERS = {
     "Content-Type": "application/json",
 }
 
+
 def _create_response(message, code):
     r_body = ""
     if code != 204:
@@ -30,17 +29,16 @@ def _create_response(message, code):
 
     return (r_body, code, GLOBAL_HEADERS)
 
+
 def _create_error_response(message, ex=None):
-    r_body = {
-        "status": "error",
-        "message": message,
-        "details": None,
-    }
+    r_body = {"status": "error", "message": message, "details": None}
     if ex is not None:
-        details = repr(ex)
+        print(f"ERROR OCCURRED: {repr(ex)}")
+        r_body["details"] = repr(ex)
 
     r_body = jsonify(r_body)
     return (r_body, 500, GLOBAL_HEADERS)
+
 
 def _handle_request(request, required_method="GET"):
     if request.method == "OPTIONS":
@@ -69,15 +67,15 @@ def get_bots(request):
         try:
             bucket_name = "bot-configurations"
             storage_client = storage.Client()
-            bucket = storage_client.get_bucket(bucket_name)
+            # bucket = storage_client.get_bucket(bucket_name)
             blobs = storage_client.list_blobs(bucket_name)
             response_list = [json.loads(blob.download_as_string()) for blob in blobs]
 
             return json.dumps(response_list), 200, GLOBAL_HEADERS
-        except KeyError as e:
-            return _create_error_response("can't find any bots!", e)
+        except KeyError as ex:
+            return _create_error_response("can't find any bots!", ex)
         except Exception as ex:
-            return _create_error_response("unexpected error", e)
+            return _create_error_response("unexpected error", ex)
 
 
 def create_bot(request):
@@ -92,10 +90,10 @@ def create_bot(request):
         bot_name = json_data.get("bot-name")
         config = json_data.get("config")
 
-        if config == None:
+        if config is None or len(config) == 0:
             return _create_response("no valid 'config' in request body.", 400)
 
-        if bot_name == None:
+        if bot_name is None or len(bot_name) == 0:
             return _create_response("no valid 'bot-name' in request body.", 400)
 
         bot_id = bot_name
@@ -124,12 +122,7 @@ def create_bot(request):
                                 {
                                     "name": "application",
                                     "image": "index.docker.io/kamiarcoffey/bots-as-a-service:bot",
-                                    "env": [
-                                        {
-                                            "name": "bucket",
-                                            "value": bot_id
-                                        }
-                                    ],
+                                    "env": [{"name": "bucket", "value": bot_id}],
                                     "imagePullPolicy": "Always",
                                     "ports": [{"containerPort": 5000}],
                                 }
@@ -145,6 +138,7 @@ def create_bot(request):
             return jsonify({"id": "{}".format(bot_id)}), 201, GLOBAL_HEADERS
         except Exception as err:
             return _create_error_response("unexpected error", err)
+
 
 def activate_bot(request):
     result = _handle_request(request, "PUT")
@@ -173,17 +167,18 @@ def activate_bot(request):
             print(f"Now connecting to K8s.")
             k8s_apps_v1 = kube.client.AppsV1Api()
             print(f"Connected to client; creating deployment.")
-            resp = k8s_apps_v1.create_namespaced_deployment(body=dep, namespace="default")
+            resp = k8s_apps_v1.create_namespaced_deployment(
+                body=dep, namespace="default"
+            )
 
             status = "deployment created. status: {}".format(resp.metadata.name)
             return _create_response(status, 202)
-        except ApiException as error:
-            return _create_error_response("could not create deployment", err)
-        except NotFound as nf:
+        except ApiException as ex:
+            return _create_error_response("could not create deployment", ex)
+        except NotFound:
             return _create_response(f"could not find bot with id: {bot_id}", 404)
-        except Exception as err:
-            return _create_error_response("unexpected error", err)
-
+        except Exception as ex:
+            return _create_error_response("unexpected error", ex)
 
 
 def deactivate_bot(request):
@@ -198,19 +193,19 @@ def deactivate_bot(request):
         print(f"Now attempting to deactivate bot ID: {bot_id}")
         if bot_id is None:
             return _create_response("no valid 'id' in request body.", 400)
-        
-        
+
         try:
             storage_client = storage.Client()
-            bucket = storage_client.get_bucket('bot-configurations')
+            bucket = storage_client.get_bucket("bot-configurations")
             blob = bucket.blob(bot_id)
-            config_file = json.loads(blob.download_as_string(client=None).decode("utf-8"))
-            config_file['status']['online'] = False
-            blob.upload_from_string(json.dumps(config_file,indent=2))
+            config_file = json.loads(
+                blob.download_as_string(client=None).decode("utf-8")
+            )
+            config_file["status"]["online"] = False
+            blob.upload_from_string(json.dumps(config_file, indent=2))
         except Exception as idk:
             print(str(idk))
-        
-    
+
         try:
             kube.config.load_kube_config("config")
             k8s_apps_v1 = kube.client.AppsV1Api()
@@ -222,17 +217,15 @@ def deactivate_bot(request):
                 ),
             )
 
-            status = "deployment deleted. status: '{}".format(resp.metadata.name)
-
-            
-
+            status = "deployment deleted."
             return jsonify({"message": status}), 200, GLOBAL_HEADERS
         except ApiException as error:
             return _create_error_response("could not create deployment", error)
-        except NotFound as nf:
+        except NotFound:
             return _create_response(f"could not find bot with id: {bot_id}", 404)
         except Exception as error:
             return _create_error_response("unexpected error", error)
+
 
 def delete_bot(request):
     result = _handle_request(request, "DELETE")
@@ -268,7 +261,6 @@ def delete_bot(request):
             return _create_response("", 204)
 
 
-
 if __name__ == "__main__":
     # bot_id = 'test-bot'
     # storage_client = storage.Client()
@@ -289,7 +281,6 @@ if __name__ == "__main__":
 
     # status = "deployment created. status: {}".format(resp.metadata.name)
     # print(status)
-
 
     # kube.config.load_kube_config("config")
     # k8s_apps_v1 = kube.client.AppsV1Api()
