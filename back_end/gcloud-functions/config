@@ -4,19 +4,11 @@ clusters:
     certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURDekNDQWZPZ0F3SUJBZ0lRYXpkMElpWWJEWHlGbW9BeG1SUXpEakFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlReVl6WmxaV1l5TkMwNFlqRTJMVFEyTnpZdE9HUmxZaTB6TldJME9Ua3lZemcwTjJZdwpIaGNOTWpBd05ESTRNVGcxTWpNM1doY05NalV3TkRJM01UazFNak0zV2pBdk1TMHdLd1lEVlFRREV5UXlZelpsClpXWXlOQzA0WWpFMkxUUTJOell0T0dSbFlpMHpOV0kwT1RreVl6ZzBOMll3Z2dFaU1BMEdDU3FHU0liM0RRRUIKQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUUNyVEpPalBiYlhJV1JsRHQ3eXZmTFMxM25IcmZZMEowc1R1cjJRclRXZQo5L1RIdkJPUytZZDREYzZTenNjZzJ0SUozZEtMaTFOcE1RWmd3d2ZNMUR5WFo3WlB6SEtWWVBENkt1eTRneWo5CnZ2V1QzeTRkYnBlaDAxUE9QbjlYVWE1bzNOODB4S2tXT1B3emRQMWhMR1pTZmNaMEN3eWwvaW1QMEdyQTFZMTMKUTNrV2hrdW1ZVUpWbzQ5b0lRTVdpT3huQVpwc3Y1a2Y1WWNCaVZGZGFVZ3RnaHdVMmpsenlFT1ltQW15VlBpcwpKZG9TOHV3d0ZrSUIzNXJiWG5SZU1JMzJIbnp1c01wNkd0ZE1BZ1hFajBzdGNlay9vRStLLy83NS9iQVRpRm1QCnVDMEYvVERVYUpjWGNKTkxXdGdOdm11QkFWNVYrNmhLSjUwM2tRMVJvcHY5QWdNQkFBR2pJekFoTUE0R0ExVWQKRHdFQi93UUVBd0lDQkRBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFBSgpwS2FreGVtZG9DNjBSempENE5tdFNBMmtsQTA5VjhrVEtuU1RsOEc5UmNjbjE3UzAvbDNFN0dDT0RidCtZWmQ1Ck1FT1g2cnRMcldkZGtWWHRIRHJmSWlGaHBRTGsxbWZoOXdUM2RvemcrSkpxeWNNdVVTUk0vaHlQbzRDbGxjNTMKWHJvbC9GcWdDMkRybW5jbUMvTUM5UWRKTmJYS2xhYWFZcEY1VXkxMzhMTTE5MHlGcHNBTWoyUzJBNlNVN0UxMgpZN2tIUER0VHdiK2YwdXNUaGhQRVNZVVJvM0xZeS9kYUs5Y0h3VWFtZHRUZ1pNcU1NaXdQdWZXVHNYeEFBZ1AyCmFGdjJPMnZwZHRxYW8xb1JiRGRKa28yYityZ2t4SnJuN0c4ajR3aFdmNWtHRlFmTVJCUnNDSVpaNFZSQTJkRWgKaUJEQnYvTkxGcnBYZU1yNXZkMlQKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
     server: https://35.184.229.246
   name: gke_bots-as-a-service_us-central1-c_bots
-- cluster:
-    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURERENDQWZTZ0F3SUJBZ0lSQUpTUk1MQkExMzJSaXZXSFBsYmxKaUl3RFFZSktvWklodmNOQVFFTEJRQXcKTHpFdE1Dc0dBMVVFQXhNa1pXRXlabVl3Wm1VdFlUQm1PUzAwT0RsbExXSmlPVFl0WkdJeE1qRmtORFpsTmpNMwpNQjRYRFRJd01EUXlOakl4TWprMU4xb1hEVEkxTURReU5USXlNamsxTjFvd0x6RXRNQ3NHQTFVRUF4TWtaV0V5ClptWXdabVV0WVRCbU9TMDBPRGxsTFdKaU9UWXRaR0l4TWpGa05EWmxOak0zTUlJQklqQU5CZ2txaGtpRzl3MEIKQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBMVNzbFprVlkzenJrN0FnamxoUVp4cDREbDRQZGFaQ1o0NFlkT3E0eAplVEhKamhzMVlySGJmcngyNnlzbmhrVktCSWprbk5OZWFrczVVUEVmMWcvRVZCZHFaMExHdDhrazN3SDZvbGN5Clo1T3hSbVhZVElwL2JqL2Zpb3JVWGYxdEo4bVJZekl0K1c2a2podmRFcUlua0VHcC9iaFVUMHpQSmxPZE5nNDQKTytLTUhXeWM1cFZxdzdtZEd3QzFOTFR2K21Jem9UZk0xSXhVQm9PSUdwOWlLUHZEbm43MkZUS2NhMUN6ZjZpMQphU3d4UjNRTGNzR1oyUnFOQ2c1Z1FCbUkxSHNVM2k0V3Y4bnJqWmd4VXNjRjdXUTVqUGxycGw2Ymc4cVFuOERZCkhLbUQ5aEwxQXI1L3BTSG12OGZXczFLdkhhaUFnSzVsVE9NWXRQWDdvV2l6cHdJREFRQUJveU13SVRBT0JnTlYKSFE4QkFmOEVCQU1DQWdRd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQQppQ0hqTG5YeHM3TWJCbEpYMnJ0TXcyTnNBRjlxQTk2bE51eFBuMDd5a1dqSmVDUTRVWkdRK3BqTW0rR1FTenRFCmpoVGlOa2g1RkM0NzBocmlWbWVMbUgzNVU4b1YybGxKQkRQZ0ZVZENpMHpJY0s4UEhQMGRjZTdBdWZ3TFZaM3MKLzVRR0R5dTVTV1BEUG9JWGdXd0Q3TjRLZGtWbXg1M1Z6ekdMc29VSE9zM25RSmZnQWtKaHhFVG9rWVlsKzNHZgpaeEdmUlYwK0NNdVpweVFhcXA5N05za29zcmNVazAxelErVWhVOHBHRUhPWDBZT2Z2NlVoYjlIV0Rqejk3Z0IyCkJYbFN5bjBGZFREZ09TNS8wSGxlN3FMdVF2VDE1L3pQV0d2ODI4SlQ4Z1pIeEtwQnFjVjBrTGZZWFZNZ0Y1K00KUFRjVnVhNWRLNHFmU29JUDEzT2xYQT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
-    server: https://34.82.248.60
-  name: gke_bots-as-a-service_us-west1_baas-bots
 contexts:
 - context:
     cluster: gke_bots-as-a-service_us-central1-c_bots
     user: gke_bots-as-a-service_us-central1-c_bots
   name: gke_bots-as-a-service_us-central1-c_bots
-- context:
-    cluster: gke_bots-as-a-service_us-west1_baas-bots
-    user: gke_bots-as-a-service_us-west1_baas-bots
-  name: gke_bots-as-a-service_us-west1_baas-bots
 current-context: gke_bots-as-a-service_us-central1-c_bots
 kind: Config
 preferences: {}
@@ -25,21 +17,10 @@ users:
   user:
     auth-provider:
       config:
-        access-token: ya29.c.KpYByAeyDbQy71OD7uehFNSEFoPztCYZ423aClNoOXA-b0EoCZZ-Ypissr89xQOYLWlgLOMQbWTjI-D64AUZBhfB2NsM7ua2CWJXbTKpmX8AVCFO7MJrqVy2OXF7tDKL-iYSjhsfK0YmZUcPpuZyI11clzQ_KHRrhjPp30vnEjwHgOGCpRLmt-aV0MsGqlbzBQj7dKNZWUGf
+        access-token: ya29.c.KpQByAdvcb0gjF7RCrj7rJUNGpoX46luIwMm98MNCjuZGFRe78HBWr33CIpKIPAIPUezNysHDYIOPRbOuV8lhyCmY8QsNjpOlE3qCD232KienC6LdjZkPwjVIaCQOOdjSZP-bZimJFiOiQczBttJoRa5sdvt8AEyqCxDwK8CWC_iEFqZT-ex9rlfljPwkfj1FqrhN4kXwg
         cmd-args: config config-helper --format=json
-        cmd-path: /google/google-cloud-sdk/bin/gcloud
-        expiry: "2020-04-28T21:27:50Z"
-        expiry-key: '{.credential.token_expiry}'
-        token-key: '{.credential.access_token}'
-      name: gcp
-- name: gke_bots-as-a-service_us-west1_baas-bots
-  user:
-    auth-provider:
-      config:
-        access-token: ya29.a0Ae4lvC3v-PFuduh7Ze7Bqq0qRXF8Q0LSmhHN1Zb49uSl-e_l8iVliPM9l3n9SQLV7V8pdNVRqdDoepCTmAJJNiMX6I8swRN1pSBPSzvN19l2uCRrgibAiKSXtd1GZp0F8xU8uD1DrGz3RJlPZ6bknIR_CZDKB7S9VkwXQN42c-ZNV2Yh9gYH2Fwgt6MBdq08PAMkaq6C1l9B1WO812Ud3Sjihf1zi6LLD_pXwjWK2ZO5ur0DL2rQYjvHoCR0UgQeSUUQbW2GS-Xb
-        cmd-args: config config-helper --format=json
-        cmd-path: /google/google-cloud-sdk/bin/gcloud
-        expiry: "2020-04-26T23:59:59Z"
+        cmd-path: ''
+        expiry: "2020-04-28T22:28:23Z"
         expiry-key: '{.credential.token_expiry}'
         token-key: '{.credential.access_token}'
       name: gcp

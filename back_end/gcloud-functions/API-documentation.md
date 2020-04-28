@@ -97,11 +97,11 @@ gcloud container clusters get-credentials bots --zone us-central1-c
 kubectl get svc
 cp ~/.kube/config ./config
 
-gcloud functions deploy get-bots --entry-point=get_bots --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy create-bot --entry-point=create_bot --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy activate-bot  --entry-point=activate_bot --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy deactivate-bot --entry-point=deactivate_bot --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy delete-bot --entry-point=delete_bot --runtime python37 --trigger-http --allow-unauthenticated
+gcloud functions deploy get-bots --entry-point=get_bots --runtime python37 --trigger-http
+gcloud functions deploy create-bot --entry-point=create_bot --runtime python37 --trigger-http
+gcloud functions deploy activate-bot  --entry-point=activate_bot --runtime python37 --trigger-http
+gcloud functions deploy deactivate-bot --entry-point=deactivate_bot --runtime python37 --trigger-http
+gcloud functions deploy delete-bot --entry-point=delete_bot --runtime python37 --trigger-http
 
 
 ### deploy an function that reads metadata from new objects in storage
