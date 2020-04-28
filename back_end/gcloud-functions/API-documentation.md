@@ -1,4 +1,4 @@
-BOTS AS A SERVICE	
+BOTS AS A SERVICE
 ============
 
 Authentication
@@ -63,8 +63,8 @@ curl --request POST 'https://us-central1-bots-as-a-service.cloudfunctions.net/cr
 
 ```json
 {
-	"result": "ok"
-	"message": {"id": "TEST"
+	"result": "ok",
+	"message": {"id": "TEST"}
 }
 ```
 
@@ -91,21 +91,24 @@ curl --request POST 'https://us-central1-bots-as-a-service.cloudfunctions.net/cr
 ```
 
 ## gcloud commands cheat sheet
-gcloud functions deploy create_bot --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy activate_bot --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy deactivate_bot --runtime python37 --trigger-http --allow-unauthenticated
-gcloud functions deploy get_bots --runtime python37 --trigger-http --allow-unauthenticated
 
-gcloud functions deploy delete_bots --runtime python37 --trigger-http --allow-unauthenticated
+gcloud auth activate-service-account --key-file=baas.json
+gcloud container clusters get-credentials bots --zone us-central1-c
+kubectl get svc
+cp ~/.kube/config ./config
 
-
+gcloud functions deploy get-bots --entry-point=get_bots --runtime python37 --trigger-http --allow-unauthenticated
+gcloud functions deploy create-bot --entry-point=create_bot --runtime python37 --trigger-http --allow-unauthenticated
+gcloud functions deploy activate-bot  --entry-point=activate_bot --runtime python37 --trigger-http --allow-unauthenticated
+gcloud functions deploy deactivate-bot --entry-point=deactivate_bot --runtime python37 --trigger-http --allow-unauthenticated
+gcloud functions deploy delete-bot --entry-point=delete_bot --runtime python37 --trigger-http --allow-unauthenticated
 
 
 ### deploy an function that reads metadata from new objects in storage
+
 gcloud functions deploy helloworld --runtime python37 --trigger-resource deployment-yaml --trigger-event google.storage.object.finalize
 
 gcloud functions logs read --limit 50
-
 
 kubectl config view
 
@@ -117,10 +120,9 @@ gcloud container clusters delete cluster bots
 
 # for just deploy (DOES NOT INCLUDE SERVICES)
 # would need service.yaml
-kubectl apply -f hub-deployment.yaml 
+
+kubectl apply -f hub-deployment.yaml
 export GOOGLE_APPLICATION_CREDENTIALS=bots-as-a-service-60111dde3f6d.json
-
-
 
 gcloud config set account kaco2654@colorado.edu
 gcloud config set project bots-as-a-service
