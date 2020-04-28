@@ -26,6 +26,7 @@ import Paper from '@material-ui/core/Paper';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import Collapse from '@material-ui/core/Collapse';
 import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles(theme => ({
@@ -104,14 +105,14 @@ function ServiceRow ({ name, payload }) {
 
 export default function ViewBotsPanel({payload}){
 	const classes = useStyles();
+	const isOnline = !payload.status.online;
 
 	// Global "is this panel processing something."
 	const [isProcessing, setIsProcessing] = React.useState(false);
 	const [alertStatus, setAlertStatus] = React.useState({severity: "error", message: ""});
+	const [botState, setBotState] = React.useState(isOnline ? 'disabled' : 'active')
 
-	const isOnline = !payload.status.online;
-
-	const enabledStatusLabel = isOnline ? 'disabled' : 'active';
+	const [needToReload, setNeedToReload] = React.useState(false);
 
 	const isPlayButtonDisabled = !isOnline;
 	const isPauseButtonDisabled = !isPlayButtonDisabled;
@@ -158,6 +159,8 @@ export default function ViewBotsPanel({payload}){
 						severity: "success",
 						message: "successfully activated bot. can take up to a minute to warm up and start."
 					});
+					setBotState("reload to see status");
+					setNeedToReload(true);
 				})
 				.catch(processError)
 		}
@@ -184,6 +187,8 @@ export default function ViewBotsPanel({payload}){
 						severity: "success",
 						message: "successfully deactivated bot."
 					});
+					setBotState("reload to see status");
+					setNeedToReload(true);
 				})
 				.catch(processError);
 		}
@@ -202,7 +207,12 @@ export default function ViewBotsPanel({payload}){
 						throw response;
 					}
 					setIsProcessing(false);
-					window.location.reload();
+					setAlertStatus({
+						severity: "success",
+						message: "successfully deleted bot."
+					});
+					setBotState("reload to see status");
+					setNeedToReload(true);
 				})
 				.catch(processError);
 		}
@@ -218,7 +228,7 @@ export default function ViewBotsPanel({payload}){
         id={ payload.name + "-header" }
       >
         <Typography className={classes.heading}>{ payload.name }</Typography>
-        <Typography className={classes.secondaryHeading}>{enabledStatusLabel}</Typography>
+        <Typography className={classes.secondaryHeading}>{ botState }</Typography>
 				<Divider orientation="vertical" flexItem />
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
@@ -228,7 +238,9 @@ export default function ViewBotsPanel({payload}){
 
 			<Grid container spacing={2}>
 				<Grid item xs={12} sm={12}>
-				{ alertStatus.message.length > 0 ? <Alert onClose={closeAlert} severity={alertStatus.severity}>{alertStatus.message}</Alert> : null}
+				<Collapse in={ alertStatus.message.length > 0 }>
+					<Alert onClose={closeAlert} severity={alertStatus.severity}>{alertStatus.message}</Alert>
+				</Collapse>
 				</Grid>
 				<Grid item xs={4} sm={4}>
 					<TableContainer component={Paper}>
@@ -283,7 +295,7 @@ export default function ViewBotsPanel({payload}){
 					className={classes.startButton}
 					onClick={processStartButton}
 					startIcon={<PlayArrowIcon />}
-					disabled={isPlayButtonDisabled}
+					disabled={ needToReload || isPlayButtonDisabled }
 				>
 	        Start
 	      </Button>
@@ -291,7 +303,7 @@ export default function ViewBotsPanel({payload}){
 					className={classes.pauseButton}
 					onClick={processDisableButton}
 					startIcon={<PauseIcon />}
-					disabled={isPauseButtonDisabled}
+					disabled={ needToReload || isPauseButtonDisabled }
 				>
 	        Disable
 	      </Button>
@@ -299,7 +311,7 @@ export default function ViewBotsPanel({payload}){
 					className={classes.deleteButton}
 					onClick={processDeleteButton}
 					startIcon={<DeleteIcon />}
-					disabled={isDeleteButtonDisabled}
+					disabled={ needToReload || isDeleteButtonDisabled }
 				>
 	        Delete
 	      </Button>
