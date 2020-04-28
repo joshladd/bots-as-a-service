@@ -107,10 +107,7 @@ export default function ViewBotsPanel({payload}){
 
 	// Global "is this panel processing something."
 	const [isProcessing, setIsProcessing] = React.useState(false);
-	const [alertStatus, setAlertStatus] = React.useState({
-		severity: "error",
-		message: ""
-	});
+	const [alertStatus, setAlertStatus] = React.useState({severity: "error", message: ""});
 
 	const isOnline = !payload.status.online;
 
@@ -125,6 +122,21 @@ export default function ViewBotsPanel({payload}){
     return <ServiceRow key={serviceName} payload={serviceConfigs} name={serviceName} />;
   }
 
+	const closeAlert = (event) => {
+		event.preventDefault();
+		setAlertStatus({severity: "error", message: ""});
+	}
+
+	const processError = (err) => {
+		err.text().then(
+			(text) => {setAlertStatus({
+				severity: "error",
+				message: `error! (${err.status}): ${text}`,
+			})}
+		)
+		setIsProcessing(false);
+	}
+
 	const processStartButton = (event) => {
 		event.preventDefault();
 		if (!isProcessing) {
@@ -135,7 +147,7 @@ export default function ViewBotsPanel({payload}){
 			})
 				.then((response) => {
 					if (!response.ok) {
-						throw response.text;
+						throw response;
 					}
 					return response.json();
 				})
@@ -143,18 +155,11 @@ export default function ViewBotsPanel({payload}){
 					console.log(data);
 					setIsProcessing(false);
 					setAlertStatus({
-						severity: "error",
-						message: "",
-					})
+						severity: "success",
+						message: "successfully activated bot. can take up to a minute to warm up and start."
+					});
 				})
-				.catch(err => {
-					console.log(err);
-					setAlertStatus({
-						severity: "error",
-						message: "Could not start bot: " + err,
-					})
-					setIsProcessing(false);
-			  })
+				.catch(processError)
 		}
 	}
 
@@ -168,7 +173,7 @@ export default function ViewBotsPanel({payload}){
 			})
 				.then((response) => {
 					if (!response.ok) {
-						throw response.text;
+						throw response;
 					}
 					return response.json();
 				})
@@ -176,17 +181,11 @@ export default function ViewBotsPanel({payload}){
 					console.log(data);
 					setIsProcessing(false);
 					setAlertStatus({
-						severity: "error",
-						message: "",
-					})
+						severity: "success",
+						message: "successfully deactivated bot."
+					});
 				})
-				.catch(err => {
-					setIsProcessing(false);
-					setAlertStatus({
-						severity: "error",
-						message: "Could not disable bot: " + err,
-					})
-			  })
+				.catch(processError);
 		}
 	}
 
@@ -200,18 +199,12 @@ export default function ViewBotsPanel({payload}){
 			})
 				.then((response) => {
 					if (!response.ok) {
-						throw response.text;
+						throw response;
 					}
 					setIsProcessing(false);
 					window.location.reload();
 				})
-				.catch(err => {
-					setIsProcessing(false);
-					setAlertStatus({
-						severity: "error",
-						message: "Could not delete bot: " + err,
-					})
-			  })
+				.catch(processError);
 		}
 	}
 
@@ -235,7 +228,7 @@ export default function ViewBotsPanel({payload}){
 
 			<Grid container spacing={2}>
 				<Grid item xs={12} sm={12}>
-				{ alertStatus.message.length > 0 ? <Alert severity={alertStatus.severity}>{alertStatus.message}</Alert> : null}
+				{ alertStatus.message.length > 0 ? <Alert onClose={closeAlert} severity={alertStatus.severity}>{alertStatus.message}</Alert> : null}
 				</Grid>
 				<Grid item xs={4} sm={4}>
 					<TableContainer component={Paper}>

@@ -44,10 +44,7 @@ export default function ViewBotsPortal(){
 	// Flag to ensure only one thread starts making network requests + loading data.
 	const [isLoading, setIsLoading] = React.useState(false);
 	const [botsList, setBotsList] = React.useState([]);
-	const [alertStatus, setAlertStatus] = React.useState({
-		severity: "info",
-		message: "grabbing bot data..."
-	});
+	const [alertStatus, setAlertStatus] = React.useState({severity: "error", message: ""});
 
 	return (
 		<React.Fragment>
@@ -62,6 +59,7 @@ export default function ViewBotsPortal(){
 						: <Typography variant="caption">no bots yet. create one!</Typography>
 					 : (
 					<Container>
+						<Alert severity="info">getting bot data...</Alert>
 						<ExpansionPanel>
 							<ExpansionPanelSummary>
 								<Skeleton animation="wave" height={10} width="30%" />
