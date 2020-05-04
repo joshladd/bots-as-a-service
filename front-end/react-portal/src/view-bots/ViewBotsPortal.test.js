@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { render, act } from '@testing-library/react';
-import App from './App';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import ViewBotsPortal from './ViewBotsPortal';
 
 let container;
 
@@ -15,7 +15,8 @@ afterEach(() => {
   container = null;
 });
 
-test('renders properly', async () => {
+
+test('renders list after fetch', async () => {
   fetch.mockResponse(JSON.stringify(
     [{
         "auth": {
@@ -55,6 +56,15 @@ test('renders properly', async () => {
   ));
 
   await act(async () => {
-    ReactDOM.render(<App />, container);
+    ReactDOM.render(<ViewBotsPortal />, container);
   });
+
+  expect(screen.getByText('bots')).toBeVisible();
+
+  const botContainerElements = screen.getAllByText('totally-a-human');
+  expect(botContainerElements).toHaveLength(2);
+  expect(botContainerElements[0]).toBeVisible();
+  expect(botContainerElements[1]).toBeVisible();
+
+  expect(screen.getAllByText('disabled')).toHaveLength(1);
 });
