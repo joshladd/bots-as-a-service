@@ -1,6 +1,7 @@
 # Bots as a Service
 
 ![front-end tests and deploy](https://github.com/joshladd/bots-as-a-service/workflows/front-end%20tests%20and%20deploy/badge.svg?branch=master) ![Back-end bot tests](https://github.com/joshladd/bots-as-a-service/workflows/Back-end%20bot%20tests/badge.svg)
+
 Team 10
 
 - Joshua Ladd
